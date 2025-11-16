@@ -3,20 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú "Ventas al detal por whatsapp"</title>
+    <title>Menú Ventas-al-detal_Pick-up_WhatsApp</title>
     <style>
         /* Estilos generales */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f8f8f8; color: #333; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            color: #333; 
+            
+            /* --- ESTILOS DE IMAGEN DE FONDO --- */
+            background-image: url('https://drive.google.com/file/d/17U0MPYp-3gMq3l_OJnFeMqeBWnZAw5Sz/view?usp=drive_link'); /* ¡REEMPLAZA ESTA URL! */
+            background-size: cover; 
+            background-attachment: fixed; 
+            background-repeat: no-repeat;
+            background-position: center center; /* Centra la imagen de fondo */
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo claro para legibilidad */
+            background-blend-mode: overlay; /* Mezcla el color con la imagen */
+            /* ---------------------------------- */
+        }
+        .container { 
+            max-width: 800px; 
+            margin: auto; 
+            background: rgba(255, 255, 255, 0.95); /* Fondo blanco semi-transparente para el contenido */
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+        }
         h1, h2 { color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; margin-top: 25px; }
 
         /* Estilos de productos y controles */
-        .producto { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dotted #eee; }
-        .producto-info { flex-grow: 1; }
+        .producto { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; /* Alinea los elementos arriba para la imagen */
+            padding: 10px 0; 
+            border-bottom: 1px dotted #eee; 
+            gap: 15px; /* Espacio entre la imagen y la info */
+        }
+        /* Nuevo estilo para la imagen del producto */
+        .producto-img {
+            width: 70px; 
+            height: 70px;
+            object-fit: cover; 
+            border-radius: 6px;
+            flex-shrink: 0; 
+        }
+        .producto-info { 
+            flex-grow: 1; 
+            min-width: 150px; /* Asegura un mínimo de ancho para la descripción */
+        }
         .producto-info h4 { margin: 0; font-size: 1.1em; }
         .producto-info p { margin: 2px 0 0; font-size: 0.9em; color: #777; }
-        .producto-precio { font-weight: bold; color: #4CAF50; margin-left: 15px; width: 80px; text-align: right; } 
-        .controls { display: flex; align-items: center; gap: 5px; }
+        .producto-precio { 
+            font-weight: bold; 
+            color: #4CAF50; 
+            margin-left: auto; /* Mueve el precio a la derecha */
+            width: 80px; 
+            text-align: right; 
+            flex-shrink: 0; /* Evita que se encoja */
+        } 
+        .controls { 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+            flex-shrink: 0; /* Evita que los controles se encojan */
+        }
         .controls button { background-color: #d32f2f; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; transition: background-color 0.3s; }
         .controls button:hover { background-color: #b71c1c; }
         .controls input { width: 40px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; }
@@ -51,7 +103,7 @@
 <body>
 
     <div class="container">
-        <h1>Ventas al detal por whatsapp</h1> 
+        <h1>Ventas-al-detal_Pick-up_WhatsApp</h1> 
 
         <div id="menu-secciones">
             <p>Cargando menú...</p>
@@ -86,11 +138,12 @@
 
     <script>
         // *** CONFIGURACIÓN CLAVE ***
-        // Reemplaza con el número de teléfono de proveedor.
+        // Reemplaza con el número de teléfono de la pizzería.
         const NUMERO_WHATSAPP = '584122525407'; 
 
         // ESTA ES LA URL DE TU GOOGLE SHEETS PUBLICADO EN FORMATO CSV
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTgXx3-FQGvkMoG88Bw8itDysLE2pQXDM1MJdJniy4z-NXyJqIE0BqPNfsBHlT0KFe6kzy77hqz-w6/pub?gid=0&single=true&output=csv'; 
+        // Confirma que esta URL sea la correcta y esté publicada.
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTgXx3-FQGvkMoG88Bw8itDysLE2pQXDM1MJdJniy4z-NXyJqIE0BqPNfsBHlT0KFe6kzy77hqz-w6/pubhtml?gid=0&single=true'; 
         // --------------------------------------------------------------------
 
         let productosDB = {}; 
@@ -129,14 +182,14 @@
                 // Usamos coma (,) como separador de columnas
                 const columnas = linea.split(','); 
                 
-                if (columnas.length < 5) {
-                    console.error("DEBUG: Línea ignorada (menos de 5 columnas):", linea);
+                if (columnas.length < 6) { // *** CAMBIO CLAVE: AHORA ESPERAMOS 6 COLUMNAS ***
+                    console.error("DEBUG: Línea ignorada (menos de 6 columnas):", linea);
                     continue; 
                 }
 
                 try {
-                    // 1. Mapea y limpia las columnas: ID, NOMBRE, PRECIO, DESCRIPCIÓN, CATEGORÍA
-                    const [id, nombre, precioStr, desc, categoria] = columnas.map(c => c.trim().replace(/"/g, ''));
+                    // 1. Mapea y limpia las 6 columnas: ID, NOMBRE, PRECIO, DESCRIPCIÓN, CATEGORÍA, IMAGEN_URL
+                    const [id, nombre, precioStr, desc, categoria, imagenUrl] = columnas.map(c => c.trim().replace(/"/g, '')); 
                     
                     if (!id || !precioStr || !categoria) {
                         console.error("DEBUG: Fila con campos vacíos esenciales:", linea);
@@ -144,7 +197,6 @@
                     }
                     
                     // 2. Convierte la coma decimal (,) a punto decimal (.)
-                    // Esto es útil si Google Sheets aún pone comas, aunque el separador de columna sea la coma.
                     const precioLimpio = precioStr.replace(',', '.'); 
                     const precio = parseFloat(precioLimpio);
 
@@ -153,7 +205,7 @@
                         continue;
                     }
 
-                    const producto = { id, nombre, precio, desc, categoria };
+                    const producto = { id, nombre, precio, desc, categoria, imagenUrl }; // *** CAMBIO CLAVE: AGREGAMOS imagenUrl al objeto producto ***
 
                     // 3. Agrupa por Categoría
                     if (!data[categoria]) {
@@ -180,8 +232,20 @@
                 html += `<h2>${seccion}</h2><div class="menu-section">`;
                 productosDB[seccion].forEach(p => {
                     carrito[p.id] = 0; 
-                    // Mostrando en Bolívares
-                    html += `<div class="producto"><div class="producto-info"><h4>${p.nombre}</h4><p>${p.desc}</p></div><div class="producto-precio">Bs ${p.precio.toFixed(2)}</div><div class="controls"><button onclick="cambiarCantidad('${p.id}', -1)">-</button><input type="number" id="cant-${p.id}" value="0" min="0" onchange="actualizarCarrito(this, '${p.id}')"><button onclick="cambiarCantidad('${p.id}', 1)">+</button></div></div>`;
+                    // Mostrando en Bolívares e INCLUYENDO LA IMAGEN DEL PRODUCTO
+                    html += `<div class="producto">
+                                <img src="${p.imagenUrl}" alt="${p.nombre}" class="producto-img">
+                                <div class="producto-info">
+                                    <h4>${p.nombre}</h4>
+                                    <p>${p.desc}</p>
+                                </div>
+                                <div class="producto-precio">Bs ${p.precio.toFixed(2)}</div>
+                                <div class="controls">
+                                    <button onclick="cambiarCantidad('${p.id}', -1)">-</button>
+                                    <input type="number" id="cant-${p.id}" value="0" min="0" onchange="actualizarCarrito(this, '${p.id}')">
+                                    <button onclick="cambiarCantidad('${p.id}', 1)">+</button>
+                                </div>
+                            </div>`;
                 });
                 html += '</div>';
             }
@@ -255,7 +319,7 @@
             const items = obtenerItemsPedidos();
             const total = document.getElementById('total').textContent;
 
-            let mensaje = `¡Hola! Mi orden para Ventas al detal por whatsapp es la siguiente:\n\n`;
+            let mensaje = `¡Hola! Mi orden para Pizzería "El Olimpo" es la siguiente:\n\n`;
             items.forEach(item => { mensaje += `${item.cantidad}x ${item.nombre}\n`; });
             // Agregando "Bs" al mensaje de WhatsApp
             mensaje += `\n*TOTAL ESTIMADO: Bs ${total}*`;
