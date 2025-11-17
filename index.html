@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Gabui.Express</title>
     <style>
+        /* [Se mantienen todos los estilos CSS anteriores] */
         /* ==================================== */
         /* ESTILOS CSS BASE */
         /* ==================================== */
@@ -281,7 +282,7 @@
     // NÚMERO DE WHATSAPP ACTUALIZADO
     const NUMERO_WHATSAPP = "584122525407"; 
 
-    // SEPARADOR DE COLUMNAS (¡Cambiado a COMA para formato de Google Sheets en inglés!)
+    // SEPARADOR DE COLUMNAS (MANTENIDO en COMA, como pediste)
     const CSV_SEPARATOR = ',';
 
     let carrito = [];
@@ -316,7 +317,7 @@
                 actualizarVistaCarrito();
                 carruselContenedor.classList.remove('loading-state');
             } else {
-                 carruselContenedor.innerHTML = '⚠️ Error: No se encontraron productos o las columnas son incorrectas. Verifica que uses el separador CSV correcto (coma "," o punto y coma ";").';
+                 carruselContenedor.innerHTML = '⚠️ Error: No se encontraron productos. Verifica que la hoja esté publicada correctamente y que las columnas sean correctas.';
             }
 
         } catch (error) {
@@ -331,9 +332,11 @@
 
         // Limpiamos los encabezados de retornos de carro y los ponemos en mayúsculas
         const encabezados = lineas[0].replace(/\r/g, '').split(CSV_SEPARATOR).map(h => h.trim().toUpperCase());
+        
+        // Encontramos el índice de la columna PRECIO para aplicar la corrección de decimales
+        const precioIndex = encabezados.indexOf('PRECIO');
 
         for (let i = 1; i < lineas.length; i++) {
-            // Se usa una expresión regular para manejar comas dentro de comillas (si las hubiera, aunque el split simple es más seguro aquí)
             const valores = lineas[i].replace(/\r/g, '').split(CSV_SEPARATOR).map(v => v.trim());
             if (valores.length !== encabezados.length) continue; 
 
@@ -342,11 +345,19 @@
                 producto[encabezados[j]] = valores[j];
             }
             
-            // Mapeo de columnas de tu hoja
+            // --- CORRECCIÓN DE DECIMALES ---
+            let precioProcesado = producto.PRECIO;
+            // Si la columna PRECIO usa coma (,) como decimal, la reemplazamos por punto (.)
+            if (precioIndex !== -1 && valores[precioIndex].includes(',')) {
+                precioProcesado = valores[precioIndex].replace(',', '.');
+            }
+            // -------------------------------
+            
+            // Mapeo de columnas
             productos.push({
                 id: producto.ID,
                 nombre: producto.NOMBRE,
-                precio: parseFloat(producto.PRECIO) || 0,
+                precio: parseFloat(precioProcesado) || 0, // Usamos el precio procesado
                 moneda: producto.MONEDA,
                 categoria: producto.CATEGORIA, 
                 descripcion: producto.DESCRIPCION || '', 
