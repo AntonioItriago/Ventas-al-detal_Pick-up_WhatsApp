@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Dinámico Gabui.Express</title>
+    <title>Menú Gabui.Express</title>
     <style>
         /* ==================================== */
         /* ESTILOS CSS BASE */
         /* ==================================== */
         body { 
             font-family: 'Arial', sans-serif; 
-            /* --- CAMBIO PARA EL FONDO DE PANTALLA --- */
+            /* --- FONDO DE PANTALLA --- */
             background-image: url('A vibrant and appeti.png'); 
             background-size: cover; 
             background-attachment: fixed; 
             background-repeat: no-repeat; 
-            background-color: #333; /* Color de respaldo */
-            /* -------------------------------------- */
+            background-color: #333;
             margin: 0; 
             padding: 20px; 
             color: #333;
         }
-        /* Contenedor principal para centrar el contenido y dar contraste al fondo */
         .main-container {
             max-width: 500px;
             margin: 0 auto;
@@ -29,7 +27,6 @@
         h1, h2 { 
             text-align: center; 
             color: #d9534f;
-            /* Se añade sombra para mejor contraste sobre el fondo */
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
         }
         
@@ -39,7 +36,7 @@
             align-items: center; 
             justify-content: center; 
             margin-bottom: 20px; 
-            background-color: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente para el header */
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
         }
@@ -72,117 +69,42 @@
             margin-left: 5px; 
         }
 
-        /* --- ESTILOS DEL CARRUSEL --- */
-        #carrusel-contenedor {
-            position: relative;
-            width: 100%;
-            max-width: 450px; 
-            margin: 20px auto;
-            border: 5px solid #ffc107;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-            overflow: hidden; 
-            border-radius: 10px;
-        }
-        
-        .pagina-catalogo {
-            position: relative;
-            width: 100%;
-            display: none; 
-        }
-        .pagina-catalogo.activa {
-            display: block; 
-        }
-        
-        .imagen-promos {
-            width: 100%; 
-            height: auto;
-            display: block;
-        }
-
-        /* --- BOTONES DE NAVEGACIÓN --- */
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            z-index: 20;
-            font-size: 20px;
-            border-radius: 5px;
-        }
-        #prevBtn { left: 5px; }
-        #nextBtn { right: 5px; }
-
-        /* --- BOTONES FLOTANTES DE PRODUCTO (AÑADIR) --- */
-        .boton-flotante {
-            position: absolute; 
-            background-color: rgba(255, 193, 7, 0.95); 
-            color: #333;
-            border: 2px solid #333;
-            padding: 6px 10px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            z-index: 15; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            transition: background-color 0.2s;
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            min-width: 100px; 
-        }
-        .boton-flotante:hover {
-            background-color: #ffd700;
-        }
-        /* Estilos específicos para los botones +/- dentro del control flotante */
-        .boton-flotante button {
-            background-color: #d9534f;
-            color: white;
-            border: none;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%; 
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 1;
-            padding: 0;
-            margin: 0 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .boton-flotante span {
-            font-weight: bold;
-            padding: 0 5px;
-        }
-
-        /* --- VISTA DEL CARRO Y ADICIONALES --- */
-        
-        #seccion-adicionales, #detalle-carrito {
+        /* --- ESTILOS DEL MENÚ PRINCIPAL --- */
+        #menu-principal, #seccion-adicionales, #detalle-carrito {
             background-color: rgba(255, 255, 255, 0.95); /* Fondo blanco para contraste */
             border-radius: 8px;
             padding: 15px;
             margin-top: 15px;
         }
 
-        .adicional { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 10px 0; 
-            border-bottom: 1px dashed #ccc; 
-            margin-bottom: 5px;
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed #eee;
         }
-        .adicional:last-child { border-bottom: none; }
-        .adicional span { font-weight: bold; }
+        .menu-item-info {
+            flex-grow: 1;
+            padding-right: 10px;
+        }
+        .menu-item-info strong {
+            display: block;
+            font-size: 1.1em;
+            color: #d9534f;
+        }
+        .menu-item-info span {
+            font-size: 0.9em;
+            color: #666;
+        }
         
-        /* Estilos de los controles de cantidad en la sección de adicionales */
-        #seccion-adicionales .item-carrito-controls button {
+        /* Controles de cantidad (Añadir/Quitar) */
+        .item-carrito-controls {
+             display: flex; 
+             align-items: center;
+             min-width: 100px;
+        }
+        .item-carrito-controls button {
             background-color: #d9534f;
             color: white;
             border: none;
@@ -191,15 +113,27 @@
             border-radius: 4px;
             cursor: pointer;
             margin: 0 5px;
+            font-weight: bold;
         }
-        #seccion-adicionales .item-carrito-controls span {
+        .item-carrito-controls span {
             font-weight: bold;
             padding: 0 5px;
+            min-width: 15px;
+            text-align: center;
         }
-        
+        /* Botón Añadir para ítems sin cantidad */
+        .btn-add {
+            background-color: #5cb85c !important; 
+            padding: 8px 12px !important;
+            border-radius: 4px !important;
+            width: auto !important;
+            height: auto !important;
+            font-size: 1em !important;
+            margin: 0;
+        }
+
+        /* --- VISTA DEL CARRO --- */
         #detalle-carrito ul { list-style: none; padding: 0; }
-        
-        /* Estilos de cada ítem en el carrito con botones de +/- */
         .item-carrito { 
             display: flex; 
             justify-content: space-between; 
@@ -208,14 +142,6 @@
             border-bottom: 1px dotted #eee; 
             padding-bottom: 5px; 
         }
-        .item-carrito-info {
-            flex-grow: 1; 
-        }
-        .item-carrito-controls {
-             display: flex; 
-             align-items: center;
-        }
-        /* ... (controles +/- son iguales a los de adicionales) ... */
         
         #btn-finalizar {
             display: block;
@@ -235,20 +161,6 @@
             background-color: #128c7e;
         }
         
-        /* Estilos para el mensaje de carga/error */
-        #carrusel-contenedor.loading {
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-            color: #666;
-            background-color: #fff;
-            border-radius: 10px;
-        }
-        #carrusel-contenedor.loading .nav-btn {
-            display: none;
-        }
         .footer-note {
             text-align: center; 
             font-size: 0.8em; 
@@ -271,16 +183,11 @@
         <h1 class="brand-name">Gabui.Express</h1>
     </div>
 
-    <div id="carrusel-contenedor" class="loading">
-        Cargando productos desde Google Sheets...
+    <h2>🍔 Menú Principal</h2>
+    <div id="menu-principal" class="loading-state">
+        Cargando menú desde Google Sheets...
     </div>
 
-    <hr style="border-top: 1px solid rgba(255,255,255,0.5);">
-
-    <h2>🥤 Adicionales (Bebidas, Postres, etc.)</h2>
-    <div id="seccion-adicionales">
-        </div>
-    
     <hr style="border-top: 1px solid rgba(255,255,255,0.5);">
     
     <h2>📋 Tu Pedido Final</h2>
@@ -305,19 +212,13 @@
     // TASA BCV ACTUALIZADA MANUALMENTE (16 de Noviembre de 2025)
     const TASA_BCV_HOY = 236.1650; 
 
-    // ** SEPARADOR DE COLUMNAS (ADAPTADO A TU HOJA) **
+    // SEPARADOR DE COLUMNAS (ADAPTADO A TU HOJA)
     const CSV_SEPARATOR = ';';
 
     let carrito = [];
     let productos = []; 
-    let adicionalesIds = []; 
-    let paginasCarrusel = {}; 
-
-    let paginaActual = 0;
-    
-    const carruselContenedor = document.getElementById('carrusel-contenedor');
+    let menuContenedor = document.getElementById('menu-principal');
     const secciones = {
-        adicionales: document.getElementById('seccion-adicionales'),
         carrito: document.getElementById('detalle-carrito'),
         contador: document.getElementById('contador-carrito')
     };
@@ -335,19 +236,16 @@
             parseCSV(csvText);
             
             if (productos.length > 0) {
-                agruparProductos();
-                renderizarCarrusel();
-                mostrarPagina(0); 
-                renderizarAdicionales();
+                renderizarMenu();
                 actualizarVistaCarrito();
-                carruselContenedor.classList.remove('loading');
+                menuContenedor.classList.remove('loading-state');
             } else {
-                 carruselContenedor.innerHTML = '⚠️ Error: No se encontraron productos o las columnas son incorrectas. Revisa tu hoja y la configuración de CSV.';
+                 menuContenedor.innerHTML = '⚠️ Error: No se encontraron productos o las columnas son incorrectas.';
             }
 
         } catch (error) {
             console.error("Error al cargar o parsear el CSV:", error);
-            carruselContenedor.innerHTML = `⚠️ Error al cargar los datos: ${error.message}. Verifica el enlace y el formato de la hoja.`;
+            menuContenedor.innerHTML = `⚠️ Error al cargar los datos: ${error.message}. Verifica el enlace y el formato de la hoja.`;
         }
     }
     
@@ -367,105 +265,78 @@
                 producto[encabezados[j]] = valores[j];
             }
             
-            // Mapeo de columnas de tu hoja al objeto de producto esperado
+            // Mapeo de columnas de tu hoja
             productos.push({
                 id: producto.ID,
                 nombre: producto.NOMBRE,
                 precio: parseFloat(producto.PRECIO) || 0,
                 moneda: producto.MONEDA,
                 
-                // Mapea CATEGORIA a tipo 
-                tipo: producto.CATEGORIA, 
+                // Usamos CATEGORIA para agrupar los ítems
+                categoria: producto.CATEGORIA, 
                 
-                // Mapea IMAGENURL a imagen
-                imagen: producto.IMAGENURL, 
-                
-                // Campos adicionales necesarios para el layout
-                posicion: producto.POSICION || '', 
-                pagina: parseInt(producto.PAGINA) || 0 
+                // Mantenemos DESCRIPCION que ahora es relevante
+                descripcion: producto.DESCRIPCION || '', 
             });
         }
     }
     
-    // Función para agrupar productos por página y separar adicionales
-    function agruparProductos() {
-        paginasCarrusel = {};
-        adicionalesIds = [];
+    // Función para generar la lista del menú
+    function renderizarMenu() {
+        menuContenedor.innerHTML = '';
         
-        productos.forEach(p => {
-            if (p.tipo === 'PROMO' && p.pagina > 0 && p.imagen) {
-                if (!paginasCarrusel[p.pagina]) {
-                    paginasCarrusel[p.pagina] = {
-                        imagen: p.imagen, 
-                        promos: []
-                    };
+        // Agrupamos todos los productos por su CATEGORIA
+        const productosPorCategoria = productos.reduce((acc, p) => {
+            if (p.categoria) {
+                if (!acc[p.categoria]) {
+                    acc[p.categoria] = [];
                 }
-                paginasCarrusel[p.pagina].promos.push(p);
-            } else if (p.tipo === 'ADICIONAL') {
-                adicionalesIds.push(p.id);
+                acc[p.categoria].push(p);
             }
-        });
-    }
-    
-    // Función para generar el HTML del carrusel y sus botones
-    function renderizarCarrusel() {
-        carruselContenedor.innerHTML = `
-            <button id="prevBtn" class="nav-btn">❮</button>
-            <button id="nextBtn" class="nav-btn">❯</button>
-        `;
+            return acc;
+        }, {});
         
-        const sortedPages = Object.keys(paginasCarrusel).sort((a, b) => a - b);
-        
-        if (sortedPages.length === 0) {
-            carruselContenedor.innerHTML = '⚠️ No hay promociones con imágenes, posición y página definidos en tu hoja.';
-            return;
-        }
+        const categoriasOrdenadas = Object.keys(productosPorCategoria).sort();
 
-        sortedPages.forEach((pageNumber, index) => {
-            const pageData = paginasCarrusel[pageNumber];
+        categoriasOrdenadas.forEach(categoria => {
+            // Añadimos un título para cada categoría
+            let categoriaHTML = `<h3>${categoria}</h3>`;
             
-            let pageHTML = `<div class="pagina-catalogo" id="page-${pageNumber}">`;
-            pageHTML += `<img src="${pageData.imagen}" alt="Promoción Página ${pageNumber}" class="imagen-promos">`;
-            
-            pageData.promos.forEach(promo => {
-                const precioTexto = promo.moneda === '$' ? `(${promo.precio.toFixed(2)}${promo.moneda})` : `(${promo.precio.toFixed(2)} ${promo.moneda})`;
+            productosPorCategoria[categoria].forEach(producto => {
+                const id = producto.id;
+                const item = carrito.find(p => p.id === id);
                 
-                if (promo.posicion) {
-                    pageHTML += `
-                        <div class="boton-flotante" style="${promo.posicion}" data-product-id="${promo.id}" data-price-text="${precioTexto}">
-                            Añadir ${precioTexto}
+                let precioTexto = producto.moneda === '$' ? `$${producto.precio.toFixed(2)}` : `${producto.precio.toFixed(2)} ${producto.moneda}`;
+                
+                let controlesHTML;
+                if (item) {
+                    controlesHTML = `
+                        <div class="item-carrito-controls">
+                            <button onclick="cambiarCantidad('${id}', -1)">-</button>
+                            <span>${item.cantidad}</span>
+                            <button onclick="cambiarCantidad('${id}', 1)">+</button>
                         </div>
                     `;
+                } else {
+                    controlesHTML = `<button class="btn-add" onclick="cambiarCantidad('${id}', 1)">➕ Añadir</button>`;
                 }
-            });
-            
-            pageHTML += `</div>`;
-            carruselContenedor.insertAdjacentHTML('beforeend', pageHTML);
-        });
-        
-        document.getElementById('nextBtn').addEventListener('click', () => {
-            mostrarPagina(paginaActual + 1);
-        });
 
-        document.getElementById('prevBtn').addEventListener('click', () => {
-            mostrarPagina(paginaActual - 1);
+                categoriaHTML += `
+                    <div class="menu-item">
+                        <div class="menu-item-info">
+                            <strong>${producto.nombre} - ${precioTexto}</strong>
+                            <span>${producto.descripcion}</span>
+                        </div>
+                        ${controlesHTML}
+                    </div>
+                `;
+            });
+
+            menuContenedor.insertAdjacentHTML('beforeend', categoriaHTML);
         });
     }
     
-    function mostrarPagina(index) {
-        const paginas = document.querySelectorAll('.pagina-catalogo');
-        if (paginas.length === 0) return;
-        
-        paginas.forEach((pagina) => {
-            pagina.classList.remove('activa');
-        });
-        
-        paginaActual = (index + paginas.length) % paginas.length;
-        paginas[paginaActual].classList.add('activa');
-        
-        actualizarBotonesFlotantes(paginas[paginaActual]);
-    }
-    
+    // Función para manejar la cantidad de productos en el carrito
     function cambiarCantidad(productoId, delta) {
         let itemIndex = carrito.findIndex(item => item.id === productoId);
         const productoAAgregar = productos.find(p => p.id === productoId);
@@ -489,69 +360,14 @@
         }
 
         actualizarVistaCarrito();
-        const paginas = document.querySelectorAll('.pagina-catalogo');
-        paginas.forEach(p => actualizarBotonesFlotantes(p)); 
-        renderizarAdicionales(); 
-    }
-    
-    function actualizarBotonesFlotantes(contenedor) {
-        const botones = contenedor.querySelectorAll('.boton-flotante');
-
-        botones.forEach(btn => {
-            const id = btn.getAttribute('data-product-id');
-            const precioTexto = btn.getAttribute('data-price-text');
-            const item = carrito.find(p => p.id === id);
-
-            if (item) {
-                btn.innerHTML = `
-                    <button onclick="cambiarCantidad('${id}', -1)">-</button>
-                    <span>${item.cantidad}</span>
-                    <button onclick="cambiarCantidad('${id}', 1)">+</button>
-                `;
-            } else {
-                btn.innerHTML = `Añadir ${precioTexto}`;
-                btn.onclick = () => cambiarCantidad(id, 1);
-            }
-        });
-    }
-
-    function renderizarAdicionales() {
-        secciones.adicionales.innerHTML = ''; 
-
-        adicionalesIds.forEach(id => {
-            const producto = productos.find(p => p.id === id);
-            if (!producto) return;
-            
-            const item = carrito.find(p => p.id === id);
-            
-            let botonHTML;
-            let precioTexto = producto.moneda === '$' ? `$${producto.precio.toFixed(2)}` : `${producto.precio.toFixed(2)} ${producto.moneda}`;
-
-            if (item) {
-                botonHTML = `
-                    <div class="item-carrito-controls">
-                        <button onclick="cambiarCantidad('${id}', -1)">-</button>
-                        <span>${item.cantidad}</span>
-                        <button onclick="cambiarCantidad('${id}', 1)">+</button>
-                    </div>
-                `;
-            } else {
-                botonHTML = `<button onclick="cambiarCantidad('${id}', 1)" style="background-color: #5cb85c; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">➕ Añadir</button>`;
-            }
-
-            secciones.adicionales.innerHTML += `
-                <div class="adicional">
-                    <span>${producto.nombre} - ${precioTexto}</span>
-                    ${botonHTML}
-                </div>
-            `;
-        });
+        renderizarMenu(); // Volvemos a renderizar para actualizar los botones del menú
     }
     
     function calcularTotalItems() {
       return carrito.reduce((total, item) => total + item.cantidad, 0);
     }
 
+    // Función para actualizar el resumen del carrito
     function actualizarVistaCarrito() {
         const totalItems = calcularTotalItems();
         secciones.contador.textContent = totalItems;
@@ -559,7 +375,7 @@
         secciones.carrito.innerHTML = ''; 
 
         if (carrito.length === 0) {
-            secciones.carrito.innerHTML = '<p>El carrito está vacío. Empieza a seleccionar tus promos.</p>';
+            secciones.carrito.innerHTML = '<p>El carrito está vacío. Empieza a seleccionar tus ítems.</p>';
             return;
         }
 
