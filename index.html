@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Gabui.Express</title>
     <style>
-        /* [Se mantienen todos los estilos CSS anteriores] */
         /* ==================================== */
         /* ESTILOS CSS BASE */
         /* ==================================== */
@@ -282,8 +281,20 @@
     // NÚMERO DE WHATSAPP ACTUALIZADO
     const NUMERO_WHATSAPP = "584122525407"; 
 
-    // SEPARADOR DE COLUMNAS (MANTENIDO en COMA, como pediste)
+    // SEPARADOR DE COLUMNAS (COMA)
     const CSV_SEPARATOR = ',';
+    
+    // ===========================================
+    // NUEVO: ORDEN PERSONALIZADO DE CATEGORÍAS
+    // Las categorías de tu hoja deben coincidir con estos nombres
+    // (no importa mayúsculas/minúsculas, el código las normaliza)
+    // ===========================================
+    const ORDEN_CATEGORIAS_PREFERIDO = [
+        "ESPECIALES",
+        "COMBOS",
+        "ADICIONALES"
+        // Si tienes otras categorías en tu hoja, se añadirán al final alfabéticamente
+    ];
 
     let carrito = [];
     let productos = []; 
@@ -345,13 +356,12 @@
                 producto[encabezados[j]] = valores[j];
             }
             
-            // --- CORRECCIÓN DE DECIMALES ---
+            // --- CORRECCIÓN DE DECIMALES (COMAS A PUNTOS) ---
             let precioProcesado = producto.PRECIO;
-            // Si la columna PRECIO usa coma (,) como decimal, la reemplazamos por punto (.)
-            if (precioIndex !== -1 && valores[precioIndex].includes(',')) {
+            if (precioIndex !== -1 && valores[precioIndex] && valores[precioIndex].includes(',')) {
                 precioProcesado = valores[precioIndex].replace(',', '.');
             }
-            // -------------------------------
+            // -----------------------------------------------
             
             // Mapeo de columnas
             productos.push({
@@ -369,6 +379,7 @@
     function agruparProductos() {
         productosPorCategoria = productos.reduce((acc, p) => {
             if (p.categoria && p.id) {
+                // Convertimos la categoría a mayúsculas para la clave
                 const categoriaKey = p.categoria.toUpperCase();
                 if (!acc[categoriaKey]) {
                     acc[categoriaKey] = [];
@@ -378,7 +389,25 @@
             return acc;
         }, {});
         
-        categoriasOrdenadas = Object.keys(productosPorCategoria).sort();
+        // --- NUEVA LÓGICA DE ORDENAMIENTO PERSONALIZADO ---
+        let categoriasEncontradas = Object.keys(productosPorCategoria);
+        let categoriasRestantes = [...categoriasEncontradas];
+        
+        // 1. Añadir las categorías en el orden deseado
+        categoriasOrdenadas = ORDEN_CATEGORIAS_PREFERIDO.filter(orden => {
+            const index = categoriasRestantes.indexOf(orden);
+            if (index !== -1) {
+                categoriasRestantes.splice(index, 1); // Remover de las restantes
+                return true;
+            }
+            return false;
+        });
+
+        // 2. Añadir el resto de categorías al final, ordenadas alfabéticamente
+        categoriasRestantes.sort();
+        categoriasOrdenadas = categoriasOrdenadas.concat(categoriasRestantes);
+        // --------------------------------------------------
+
 
         // Muestra/Oculta los botones de navegación si hay más de 1 categoría
         if (categoriasOrdenadas.length > 1) {
