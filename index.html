@@ -10,8 +10,8 @@
         /* ==================================== */
         body { 
             font-family: 'Arial', sans-serif; 
-            /* --- FONDO DE PANTALLA --- */
-            background-image: url('A vibrant and appeti.png'); 
+            /* --- FONDO DE PANTALLA (Actualiza esta línea con tu imagen) --- */
+            background-image: url('fondo_carbon.jpg'); 
             background-size: cover; 
             background-attachment: fixed; 
             background-repeat: no-repeat; 
@@ -278,7 +278,7 @@
     // API ACTUALIZADA: para obtener la tasa BCV en tiempo real
     const BCV_API_URL = 'https://bcv-api.rafnixg.dev/rates/';
 
-    // Variable global para la tasa. Se inicializa con un valor de respaldo (tasa BCV anterior: 236.1650 BS/USD)
+    // Variable global para la tasa. Se inicializa con un valor de respaldo (BCV 2025-11-14: 236.1650 BS/USD)
     let TASA_BCV_HOY = 236.1650; 
     
     // NÚMERO DE WHATSAPP ACTUALIZADO
@@ -320,7 +320,7 @@
             
             const data = await response.json();
             
-            // Busca el objeto donde 'code' es 'USD'
+            // Busca el objeto donde 'code' es 'USD' y 'source' es 'BCV'
             const usdRateObject = data.find(rateObj => rateObj.code === "USD" && rateObj.source === "BCV");
 
             if (usdRateObject && usdRateObject.rate) {
@@ -545,7 +545,7 @@
       return carrito.reduce((total, item) => total + item.cantidad, 0);
     }
 
-    // Función para actualizar el resumen del carrito
+    // Función para actualizar el resumen del carrito (vista en la página)
     function actualizarVistaCarrito() {
         const totalItems = calcularTotalItems();
         secciones.contador.textContent = totalItems;
@@ -592,13 +592,12 @@
             contenidoHTML += `<p>Total en USD: <strong>$${totalPagarUSD.toFixed(2)}</strong></p>`;
         }
         if (totalPagarBS > 0) {
-            contenidoHTML += `<p>Total en BS (Sin Conversión): <strong>${totalPagarBS.toFixed(2)} BS</strong></p>`;
+            contenidoHTML += `<p>Total en BS (Sin Conversión de USD): <strong>${totalPagarBS.toFixed(2)} BS</strong></p>`;
         }
         
         let totalGeneralBS = totalPagarBS + (totalPagarUSD * TASA_BCV_HOY);
         
         if (totalGeneralBS > 0) {
-            // Utilizamos toFixed(2) para mostrar solo dos decimales en el total general
             contenidoHTML += `<p style="color: #007bff; font-weight: bold;">TOTAL GENERAL ESTIMADO (BS): ${totalGeneralBS.toFixed(2)} BS</p>`;
             // Muestra la tasa utilizada con 4 decimales
             contenidoHTML += `<p style="font-size: 0.8em; color: #666;">(Tasa BCV actualizada: ${TASA_BCV_HOY.toFixed(4)})</p>`;
@@ -607,6 +606,7 @@
         secciones.carrito.innerHTML = contenidoHTML;
     }
 
+    // Función para enviar el pedido por WhatsApp
     function consultarPrecios() {
         if (carrito.length === 0) {
             alert("¡El carrito está vacío! Por favor, añade productos antes de enviar el pedido.");
@@ -629,11 +629,16 @@
             }
         });
 
+        // Calculamos el total general en bolívares para el mensaje de WhatsApp
+        let totalGeneralBS = totalBS + (totalUSD * TASA_BCV_HOY);
+
         mensaje += "\n----------------------------------";
         mensaje += `\nTOTAL ESTIMADO EN USD: $${totalUSD.toFixed(2)}`;
-        mensaje += `\nTOTAL ESTIMADO EN BS (sin convers. de $): ${totalBS.toFixed(2)} BS`;
+        mensaje += `\nTOTAL ESTIMADO EN BS (solo items en BS): ${totalBS.toFixed(2)} BS`;
+        // Línea clave: Total General en Bolívares
+        mensaje += `\nTOTAL GENERAL ESTIMADO (BS): ${totalGeneralBS.toFixed(2)} BS`;
         mensaje += `\n----------------------------------`;
-        mensaje += `\n(Tasa BCV actualizada: ${TASA_BCV_HOY.toFixed(4)})`;
+        mensaje += `\n(Tasa BCV utilizada: ${TASA_BCV_HOY.toFixed(4)})`;
         mensaje += `\n\nPor favor, confirmen el precio final, la tasa BCV del día y el costo de delivery. ¡Gracias!`;
         
         const mensajeCodificado = encodeURIComponent(mensaje);
