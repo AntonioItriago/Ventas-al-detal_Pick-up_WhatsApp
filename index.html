@@ -69,12 +69,18 @@
             margin-left: 5px; 
         }
 
-        /* --- ESTILOS DEL MENÚ PRINCIPAL --- */
-        #menu-principal, #seccion-adicionales, #detalle-carrito {
+        /* --- ESTILOS DEL MENÚ PRINCIPAL Y ADICIONALES --- */
+        #menu-principal, #detalle-carrito {
             background-color: rgba(255, 255, 255, 0.95); /* Fondo blanco para contraste */
             border-radius: 8px;
             padding: 15px;
             margin-top: 15px;
+        }
+        #menu-principal h3 {
+            color: #333;
+            border-bottom: 2px solid #ffc107;
+            padding-bottom: 5px;
+            margin-top: 20px;
         }
 
         .menu-item {
@@ -83,6 +89,9 @@
             align-items: center;
             padding: 12px 0;
             border-bottom: 1px dashed #eee;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
         }
         .menu-item-info {
             flex-grow: 1;
@@ -168,6 +177,12 @@
             color: white;
             text-shadow: 1px 1px 2px #333;
         }
+        .loading-state {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -192,7 +207,7 @@
     
     <h2>📋 Tu Pedido Final</h2>
     <div id="detalle-carrito">
-        <p>El carrito está vacío. Empieza a seleccionar tus promos.</p>
+        <p>El carrito está vacío. Empieza a seleccionar tus ítems.</p>
     </div>
 
     <button id="btn-finalizar" onclick="consultarPrecios()">
@@ -271,11 +286,7 @@
                 nombre: producto.NOMBRE,
                 precio: parseFloat(producto.PRECIO) || 0,
                 moneda: producto.MONEDA,
-                
-                // Usamos CATEGORIA para agrupar los ítems
                 categoria: producto.CATEGORIA, 
-                
-                // Mantenemos DESCRIPCION que ahora es relevante
                 descripcion: producto.DESCRIPCION || '', 
             });
         }
@@ -287,15 +298,17 @@
         
         // Agrupamos todos los productos por su CATEGORIA
         const productosPorCategoria = productos.reduce((acc, p) => {
-            if (p.categoria) {
-                if (!acc[p.categoria]) {
-                    acc[p.categoria] = [];
+            if (p.categoria && p.id) { 
+                const categoriaKey = p.categoria.toUpperCase(); // Estandarizamos para agrupar
+                if (!acc[categoriaKey]) {
+                    acc[categoriaKey] = [];
                 }
-                acc[p.categoria].push(p);
+                acc[categoriaKey].push(p);
             }
             return acc;
         }, {});
         
+        // Ordenamos las categorías alfabéticamente
         const categoriasOrdenadas = Object.keys(productosPorCategoria).sort();
 
         categoriasOrdenadas.forEach(categoria => {
@@ -309,6 +322,8 @@
                 let precioTexto = producto.moneda === '$' ? `$${producto.precio.toFixed(2)}` : `${producto.precio.toFixed(2)} ${producto.moneda}`;
                 
                 let controlesHTML;
+                
+                // Lógica de visualización: si está en el carrito, muestra el control +/-
                 if (item) {
                     controlesHTML = `
                         <div class="item-carrito-controls">
@@ -318,6 +333,7 @@
                         </div>
                     `;
                 } else {
+                    // Si NO está en el carrito, muestra el botón Añadir
                     controlesHTML = `<button class="btn-add" onclick="cambiarCantidad('${id}', 1)">➕ Añadir</button>`;
                 }
 
@@ -360,7 +376,7 @@
         }
 
         actualizarVistaCarrito();
-        renderizarMenu(); // Volvemos a renderizar para actualizar los botones del menú
+        renderizarMenu(); 
     }
     
     function calcularTotalItems() {
