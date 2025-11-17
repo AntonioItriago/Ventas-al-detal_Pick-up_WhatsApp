@@ -69,20 +69,61 @@
             margin-left: 5px; 
         }
 
-        /* --- ESTILOS DEL MENÚ PRINCIPAL Y ADICIONALES --- */
-        #menu-principal, #detalle-carrito {
-            background-color: rgba(255, 255, 255, 0.95); /* Fondo blanco para contraste */
+        /* --- ESTILOS DEL CARRUSEL DE CATEGORÍAS --- */
+        #carrusel-categorias, #detalle-carrito {
+            background-color: rgba(255, 255, 255, 0.95); 
             border-radius: 8px;
-            padding: 15px;
+            padding: 15px; 
             margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            min-height: 200px;
         }
-        #menu-principal h3 {
+        .categoria-pagina {
+            display: none;
+            width: 100%;
+        }
+        .categoria-pagina.activa {
+            display: block;
+        }
+        .categoria-pagina h3 {
+            text-align: center;
             color: #333;
             border-bottom: 2px solid #ffc107;
             padding-bottom: 5px;
-            margin-top: 20px;
+            margin: 0 0 15px 0;
+            font-size: 1.5em;
+        }
+        
+        /* Controles de navegación del carrusel de categorías */
+        .nav-categoria-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            z-index: 20;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .nav-categoria-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        #prevCategoriaBtn { left: 5px; }
+        #nextCategoriaBtn { right: 5px; }
+        #carrusel-categorias.loading-state {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #666;
         }
 
+        /* --- ESTILOS DEL MENÚ ITEM CON IMAGEN --- */
         .menu-item {
             display: flex;
             justify-content: space-between;
@@ -96,13 +137,26 @@
         .menu-item-info {
             flex-grow: 1;
             padding-right: 10px;
+            display: flex;
+            align-items: center;
         }
-        .menu-item-info strong {
+        .item-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+        }
+        .item-text {
+            flex-grow: 1;
+        }
+        .item-text strong {
             display: block;
             font-size: 1.1em;
             color: #d9534f;
         }
-        .menu-item-info span {
+        .item-text span {
             font-size: 0.9em;
             color: #666;
         }
@@ -177,12 +231,6 @@
             color: white;
             text-shadow: 1px 1px 2px #333;
         }
-        .loading-state {
-            text-align: center;
-            padding: 50px;
-            font-size: 1.2em;
-            color: #666;
-        }
     </style>
 </head>
 <body>
@@ -198,10 +246,13 @@
         <h1 class="brand-name">Gabui.Express</h1>
     </div>
 
-    <h2>🍔 Menú Principal</h2>
-    <div id="menu-principal" class="loading-state">
+    <h2>Menú de Promociones</h2>
+    <div id="carrusel-categorias" class="loading-state">
         Cargando menú desde Google Sheets...
-    </div>
+        </div>
+
+    <button id="prevCategoriaBtn" class="nav-categoria-btn" style="display:none;" onclick="cambiarCategoria(-1)">&#10094;</button>
+    <button id="nextCategoriaBtn" class="nav-categoria-btn" style="display:none;" onclick="cambiarCategoria(1)">&#10095;</button>
 
     <hr style="border-top: 1px solid rgba(255,255,255,0.5);">
     
@@ -226,16 +277,25 @@
     
     // TASA BCV ACTUALIZADA MANUALMENTE (16 de Noviembre de 2025)
     const TASA_BCV_HOY = 236.1650; 
+    
+    // NÚMERO DE WHATSAPP ACTUALIZADO
+    const NUMERO_WHATSAPP = "584122525407"; 
 
-    // SEPARADOR DE COLUMNAS (ADAPTADO A TU HOJA)
-    const CSV_SEPARATOR = ',';
+    // SEPARADOR DE COLUMNAS 
+    const CSV_SEPARATOR = ';';
 
     let carrito = [];
     let productos = []; 
-    let menuContenedor = document.getElementById('menu-principal');
+    let productosPorCategoria = {};
+    let categoriasOrdenadas = [];
+    let categoriaActualIndex = 0;
+    
+    const carruselContenedor = document.getElementById('carrusel-categorias');
     const secciones = {
         carrito: document.getElementById('detalle-carrito'),
-        contador: document.getElementById('contador-carrito')
+        contador: document.getElementById('contador-carrito'),
+        prevBtn: document.getElementById('prevCategoriaBtn'),
+        nextBtn: document.getElementById('nextCategoriaBtn')
     };
     
     // ===========================================
@@ -251,20 +311,20 @@
             parseCSV(csvText);
             
             if (productos.length > 0) {
-                renderizarMenu();
+                agruparProductos();
+                renderizarCarrusel();
                 actualizarVistaCarrito();
-                menuContenedor.classList.remove('loading-state');
+                carruselContenedor.classList.remove('loading-state');
             } else {
-                 menuContenedor.innerHTML = '⚠️ Error: No se encontraron productos o las columnas son incorrectas.';
+                 carruselContenedor.innerHTML = '⚠️ Error: No se encontraron productos o las columnas son incorrectas.';
             }
 
         } catch (error) {
             console.error("Error al cargar o parsear el CSV:", error);
-            menuContenedor.innerHTML = `⚠️ Error al cargar los datos: ${error.message}. Verifica el enlace y el formato de la hoja.`;
+            carruselContenedor.innerHTML = `⚠️ Error al cargar los datos: ${error.message}. Verifica el enlace y el formato de la hoja.`;
         }
     }
     
-    // Función para parsear el texto CSV usando el punto y coma (;)
     function parseCSV(csv) {
         const lineas = csv.trim().split('\n');
         if (lineas.length === 0) return;
@@ -280,7 +340,7 @@
                 producto[encabezados[j]] = valores[j];
             }
             
-            // Mapeo de columnas de tu hoja
+            // Mapeo de columnas de tu hoja (Ahora incluimos IMAGENURL)
             productos.push({
                 id: producto.ID,
                 nombre: producto.NOMBRE,
@@ -288,18 +348,15 @@
                 moneda: producto.MONEDA,
                 categoria: producto.CATEGORIA, 
                 descripcion: producto.DESCRIPCION || '', 
+                imagenUrl: producto.IMAGENURL || '' // Capturamos la URL de la imagen
             });
         }
     }
     
-    // Función para generar la lista del menú
-    function renderizarMenu() {
-        menuContenedor.innerHTML = '';
-        
-        // Agrupamos todos los productos por su CATEGORIA
-        const productosPorCategoria = productos.reduce((acc, p) => {
-            if (p.categoria && p.id) { 
-                const categoriaKey = p.categoria.toUpperCase(); // Estandarizamos para agrupar
+    function agruparProductos() {
+        productosPorCategoria = productos.reduce((acc, p) => {
+            if (p.categoria && p.id) {
+                const categoriaKey = p.categoria.toUpperCase();
                 if (!acc[categoriaKey]) {
                     acc[categoriaKey] = [];
                 }
@@ -308,48 +365,89 @@
             return acc;
         }, {});
         
-        // Ordenamos las categorías alfabéticamente
-        const categoriasOrdenadas = Object.keys(productosPorCategoria).sort();
+        categoriasOrdenadas = Object.keys(productosPorCategoria).sort();
 
-        categoriasOrdenadas.forEach(categoria => {
-            // Añadimos un título para cada categoría
-            let categoriaHTML = `<h3>${categoria}</h3>`;
+        // Muestra/Oculta los botones de navegación si hay más de 1 categoría
+        if (categoriasOrdenadas.length > 1) {
+            secciones.prevBtn.style.display = 'block';
+            secciones.nextBtn.style.display = 'block';
+        } else {
+            secciones.prevBtn.style.display = 'none';
+            secciones.nextBtn.style.display = 'none';
+        }
+    }
+
+    // Función principal para renderizar el carrusel y la categoría activa
+    function renderizarCarrusel() {
+        carruselContenedor.innerHTML = '';
+        
+        if (categoriasOrdenadas.length === 0) {
+            carruselContenedor.innerHTML = 'No hay categorías para mostrar.';
+            return;
+        }
+
+        const categoriaActual = categoriasOrdenadas[categoriaActualIndex];
+        const productosDeCategoria = productosPorCategoria[categoriaActual];
+
+        let categoriaHTML = `<div class="categoria-pagina activa">`;
+        categoriaHTML += `<h3>${categoriaActual}</h3>`;
+        
+        productosDeCategoria.forEach(producto => {
+            const id = producto.id;
+            const item = carrito.find(p => p.id === id);
             
-            productosPorCategoria[categoria].forEach(producto => {
-                const id = producto.id;
-                const item = carrito.find(p => p.id === id);
-                
-                let precioTexto = producto.moneda === '$' ? `$${producto.precio.toFixed(2)}` : `${producto.precio.toFixed(2)} ${producto.moneda}`;
-                
-                let controlesHTML;
-                
-                // Lógica de visualización: si está en el carrito, muestra el control +/-
-                if (item) {
-                    controlesHTML = `
-                        <div class="item-carrito-controls">
-                            <button onclick="cambiarCantidad('${id}', -1)">-</button>
-                            <span>${item.cantidad}</span>
-                            <button onclick="cambiarCantidad('${id}', 1)">+</button>
-                        </div>
-                    `;
-                } else {
-                    // Si NO está en el carrito, muestra el botón Añadir
-                    controlesHTML = `<button class="btn-add" onclick="cambiarCantidad('${id}', 1)">➕ Añadir</button>`;
-                }
+            let precioTexto = producto.moneda === '$' ? `$${producto.precio.toFixed(2)}` : `${producto.precio.toFixed(2)} ${producto.moneda}`;
+            
+            let controlesHTML;
+            if (item) {
+                controlesHTML = `
+                    <div class="item-carrito-controls">
+                        <button onclick="cambiarCantidad('${id}', -1)">-</button>
+                        <span>${item.cantidad}</span>
+                        <button onclick="cambiarCantidad('${id}', 1)">+</button>
+                    </div>
+                `;
+            } else {
+                controlesHTML = `<button class="btn-add" onclick="cambiarCantidad('${id}', 1)">➕ Añadir</button>`;
+            }
 
-                categoriaHTML += `
-                    <div class="menu-item">
-                        <div class="menu-item-info">
+            // Renderiza el ítem con imagen (si la URL existe)
+            const imagenTag = producto.imagenUrl ? `<img src="${producto.imagenUrl}" alt="${producto.nombre}" class="item-thumb">` : '';
+
+            categoriaHTML += `
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        ${imagenTag}
+                        <div class="item-text">
                             <strong>${producto.nombre} - ${precioTexto}</strong>
                             <span>${producto.descripcion}</span>
                         </div>
-                        ${controlesHTML}
                     </div>
-                `;
-            });
-
-            menuContenedor.insertAdjacentHTML('beforeend', categoriaHTML);
+                    ${controlesHTML}
+                </div>
+            `;
         });
+
+        categoriaHTML += '</div>';
+        carruselContenedor.innerHTML = categoriaHTML;
+    }
+
+    // Función para cambiar de categoría en el carrusel
+    function cambiarCategoria(delta) {
+        let nuevoIndex = categoriaActualIndex + delta;
+        
+        if (nuevoIndex >= 0 && nuevoIndex < categoriasOrdenadas.length) {
+            categoriaActualIndex = nuevoIndex;
+            renderizarCarrusel();
+        } else if (nuevoIndex < 0) {
+            // Ir al final si se intenta ir hacia atrás desde el inicio
+            categoriaActualIndex = categoriasOrdenadas.length - 1;
+            renderizarCarrusel();
+        } else if (nuevoIndex >= categoriasOrdenadas.length) {
+            // Ir al inicio si se intenta ir hacia adelante desde el final
+            categoriaActualIndex = 0;
+            renderizarCarrusel();
+        }
     }
     
     // Función para manejar la cantidad de productos en el carrito
@@ -376,7 +474,7 @@
         }
 
         actualizarVistaCarrito();
-        renderizarMenu(); 
+        renderizarCarrusel(); // Actualizamos la vista del carrusel para reflejar el cambio en los botones
     }
     
     function calcularTotalItems() {
@@ -473,11 +571,19 @@
         mensaje += `\n\nPor favor, confirmen el precio final, la tasa BCV del día y el costo de delivery. ¡Gracias!`;
         
         const mensajeCodificado = encodeURIComponent(mensaje);
-        const numeroWhatsApp = "584122409530"; 
 
-        const urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensajeCodificado}`;
-        
+        // Abrir WhatsApp en una nueva ventana/pestaña
+        const urlWhatsApp = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP}&text=${mensajeCodificado}`;
         window.open(urlWhatsApp, '_blank');
+        
+        // Intentar cerrar la ventana/pestaña actual. (La mayoría de navegadores lo bloquean por seguridad)
+        setTimeout(() => {
+            try {
+                window.close();
+            } catch (e) {
+                console.log("No se pudo cerrar la ventana automáticamente. Es una restricción de seguridad del navegador.");
+            }
+        }, 500); // Pequeño retraso para asegurar que WhatsApp se abre primero.
     }
 
     document.addEventListener('DOMContentLoaded', () => {
