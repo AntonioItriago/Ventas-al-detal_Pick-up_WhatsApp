@@ -281,8 +281,8 @@
     // NÚMERO DE WHATSAPP ACTUALIZADO
     const NUMERO_WHATSAPP = "584122525407"; 
 
-    // SEPARADOR DE COLUMNAS 
-    const CSV_SEPARATOR = ';';
+    // SEPARADOR DE COLUMNAS (¡Cambiado a COMA para formato de Google Sheets en inglés!)
+    const CSV_SEPARATOR = ',';
 
     let carrito = [];
     let productos = []; 
@@ -316,7 +316,7 @@
                 actualizarVistaCarrito();
                 carruselContenedor.classList.remove('loading-state');
             } else {
-                 carruselContenedor.innerHTML = '⚠️ Error: No se encontraron productos o las columnas son incorrectas.';
+                 carruselContenedor.innerHTML = '⚠️ Error: No se encontraron productos o las columnas son incorrectas. Verifica que uses el separador CSV correcto (coma "," o punto y coma ";").';
             }
 
         } catch (error) {
@@ -329,9 +329,11 @@
         const lineas = csv.trim().split('\n');
         if (lineas.length === 0) return;
 
+        // Limpiamos los encabezados de retornos de carro y los ponemos en mayúsculas
         const encabezados = lineas[0].replace(/\r/g, '').split(CSV_SEPARATOR).map(h => h.trim().toUpperCase());
 
         for (let i = 1; i < lineas.length; i++) {
+            // Se usa una expresión regular para manejar comas dentro de comillas (si las hubiera, aunque el split simple es más seguro aquí)
             const valores = lineas[i].replace(/\r/g, '').split(CSV_SEPARATOR).map(v => v.trim());
             if (valores.length !== encabezados.length) continue; 
 
@@ -340,7 +342,7 @@
                 producto[encabezados[j]] = valores[j];
             }
             
-            // Mapeo de columnas de tu hoja (Ahora incluimos IMAGENURL)
+            // Mapeo de columnas de tu hoja
             productos.push({
                 id: producto.ID,
                 nombre: producto.NOMBRE,
@@ -348,7 +350,7 @@
                 moneda: producto.MONEDA,
                 categoria: producto.CATEGORIA, 
                 descripcion: producto.DESCRIPCION || '', 
-                imagenUrl: producto.IMAGENURL || '' // Capturamos la URL de la imagen
+                imagenUrl: producto.IMAGENURL || '' 
             });
         }
     }
@@ -382,7 +384,7 @@
         carruselContenedor.innerHTML = '';
         
         if (categoriasOrdenadas.length === 0) {
-            carruselContenedor.innerHTML = 'No hay categorías para mostrar.';
+            carruselContenedor.innerHTML = 'No hay categorías para mostrar. Verifica la columna "CATEGORIA" en tu hoja.';
             return;
         }
 
@@ -438,16 +440,14 @@
         
         if (nuevoIndex >= 0 && nuevoIndex < categoriasOrdenadas.length) {
             categoriaActualIndex = nuevoIndex;
-            renderizarCarrusel();
         } else if (nuevoIndex < 0) {
             // Ir al final si se intenta ir hacia atrás desde el inicio
             categoriaActualIndex = categoriasOrdenadas.length - 1;
-            renderizarCarrusel();
         } else if (nuevoIndex >= categoriasOrdenadas.length) {
             // Ir al inicio si se intenta ir hacia adelante desde el final
             categoriaActualIndex = 0;
-            renderizarCarrusel();
         }
+        renderizarCarrusel();
     }
     
     // Función para manejar la cantidad de productos en el carrito
@@ -474,7 +474,7 @@
         }
 
         actualizarVistaCarrito();
-        renderizarCarrusel(); // Actualizamos la vista del carrusel para reflejar el cambio en los botones
+        renderizarCarrusel(); 
     }
     
     function calcularTotalItems() {
@@ -576,14 +576,14 @@
         const urlWhatsApp = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP}&text=${mensajeCodificado}`;
         window.open(urlWhatsApp, '_blank');
         
-        // Intentar cerrar la ventana/pestaña actual. (La mayoría de navegadores lo bloquean por seguridad)
+        // Intentar cerrar la ventana/pestaña actual.
         setTimeout(() => {
             try {
                 window.close();
             } catch (e) {
-                console.log("No se pudo cerrar la ventana automáticamente. Es una restricción de seguridad del navegador.");
+                // Falla silenciosa si el navegador lo impide
             }
-        }, 500); // Pequeño retraso para asegurar que WhatsApp se abre primero.
+        }, 500); 
     }
 
     document.addEventListener('DOMContentLoaded', () => {
