@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Ventas-al-detal_Pick-up_WhatsApp</title>
     <style>
+        /* ... tus estilos CSS existentes ... */
+
+        /* --- ESTILOS PARA EL LOGO Y EL NOMBRE DEL NEGOCIO --- */
+        .brand-header {
+            display: flex; /* Permite que el logo y el texto estén en la misma línea */
+            align-items: center; /* Centra verticalmente el logo y el texto */
+            justify-content: center; /* Centra horizontalmente todo el bloque */
+            margin-bottom: 20px; /* Espacio debajo del encabezado */
+        }
+        .brand-logo {
+            height: 50px; /* Ajusta el tamaño del logo */
+            margin-right: 10px; /* Espacio entre el logo y el texto */
+            vertical-align: middle; /* Alinea con el texto */
+        }
+        .brand-name {
+            font-size: 2.2em; /* Tamaño del texto "Gabui.Express" */
+            font-weight: bold;
+            color: #d9534f; /* Color de tu marca */
+            margin: 0; /* Elimina márgenes predeterminados del h1 */
+        }
+        /* Ajuste para pantallas más pequeñas si el texto es muy grande */
+        @media (max-width: 600px) {
+            .brand-name {
+                font-size: 1.8em; 
+            }
+            .brand-logo {
+                height: 40px;
+            }
+        }
         /* Estilos generales */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -103,6 +132,31 @@
 <body>
 
     <div class="container">
+        <div class="header-carrito">
+        🛒 **Tu Carrito** <span id="contador-carrito">0</span>
+    </div>
+
+    <div class="brand-header">
+        <img src="logo.png" alt="Logo Gabui Express" class="brand-logo">
+        <h1 class="brand-name">Gabui.Express</h1>
+    </div>
+    <div id="carrusel-contenedor">
+        <button id="prevBtn" class="nav-btn">❮</button>
+
+        ```
+
+---
+
+### Explicación del Código:
+
+* **`<div class="brand-header">`**: Este es un contenedor que usa `display: flex` para que el logo y el texto (`<img>` y `<h1>`) se alineen uno al lado del otro. `justify-content: center` los centrará horizontalmente en la página.
+* **`<img src="logo-gabui-express.png" alt="Logo Gabui Express" class="brand-logo">`**: Esta etiqueta inserta tu imagen.
+    * `src="logo-gabui-express.png"`: Asegúrate de que el nombre del archivo (`logo-gabui-express.png`) sea exactamente el mismo que le diste a tu imagen descargada, y que esté en la misma carpeta que `index.html`.
+    * `alt="Logo Gabui Express"`: Texto alternativo para accesibilidad si la imagen no se carga.
+    * `class="brand-logo"`: Aplica los estilos CSS para el tamaño y el margen.
+* **`<h1 class="brand-name">Gabui.Express</h1>`**: Tu nombre de empresa con una clase para aplicarle los estilos de tamaño, color y fuente.
+
+Después de hacer estos cambios y guardar tu `index.html`, abre el archivo en tu navegador y deberías ver el logo elegantemente posicionado junto al nombre de tu negocio en la parte superior.http://googleusercontent.com/image_generation_content/3
         <h1>Ventas-al-detal_Pick-up_WhatsApp</h1> 
 
         <div id="menu-secciones">
