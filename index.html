@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Ventas-al-detal_Pick-up_WhatsApp</title>
     <style>
-        /* ... tus estilos CSS existentes ... */
-
+        /* ==================================== */
+        /* ESTILOS CSS BASE */
+        /* ==================================== */
+        
         /* --- ESTILOS PARA EL LOGO Y EL NOMBRE DEL NEGOCIO --- */
         .brand-header {
             display: flex; /* Permite que el logo y el texto estén en la misma línea */
@@ -34,6 +36,7 @@
                 height: 40px;
             }
         }
+        
         /* Estilos generales */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -42,6 +45,7 @@
             color: #333; 
             
             /* --- ESTILOS DE IMAGEN DE FONDO --- */
+            /* Se mantiene el fondo en body, pero asegúrate de que el .container sea visible */
             background-image: url('https://raw.githubusercontent.com/AntonioItriago/Ventas-al-detal_Pick-up_WhatsApp/main/A%20vibrant%20and%20appeti.png'); /* ¡REEMPLAZA ESTA URL! */
             background-size: cover; 
             background-attachment: fixed; 
@@ -54,23 +58,41 @@
         .container { 
             max-width: 800px; 
             margin: auto; 
-            background: rgba(255, 255, 255, 0.3); /* Fondo blanco semi-transparente para el contenido */
+            background: rgba(255, 255, 255, 0.9); /* Fondo blanco **casi opaco** para asegurar la visibilidad del menú */
             padding: 20px; 
             border-radius: 8px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            min-height: 100vh; /* Asegura que el contenedor cubra toda la altura de la pantalla */
         }
         h1, h2 { color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; margin-top: 25px; }
+
+        /* Estilos de carrito en el encabezado */
+        .header-carrito { 
+            display: flex; 
+            justify-content: flex-end; 
+            align-items: center; 
+            padding: 10px 0; 
+            font-weight: bold;
+        }
+        #contador-carrito { 
+            background: #d9534f; 
+            color: white; 
+            border-radius: 50%; 
+            padding: 4px 8px; 
+            font-weight: bold; 
+            font-size: 12px; 
+            margin-left: 5px; 
+        }
 
         /* Estilos de productos y controles */
         .producto { 
             display: flex; 
             justify-content: space-between; 
-            align-items: flex-start; /* Alinea los elementos arriba para la imagen */
+            align-items: flex-start; 
             padding: 10px 0; 
             border-bottom: 1px dotted #eee; 
-            gap: 15px; /* Espacio entre la imagen y la info */
+            gap: 15px; 
         }
-        /* Nuevo estilo para la imagen del producto */
         .producto-img {
             width: 70px; 
             height: 70px;
@@ -80,23 +102,23 @@
         }
         .producto-info { 
             flex-grow: 1; 
-            min-width: 150px; /* Asegura un mínimo de ancho para la descripción */
+            min-width: 150px; 
         }
         .producto-info h4 { margin: 0; font-size: 1.1em; }
         .producto-info p { margin: 2px 0 0; font-size: 0.9em; color: #777; }
         .producto-precio { 
             font-weight: bold; 
             color: #4CAF50; 
-            margin-left: auto; /* Mueve el precio a la derecha */
+            margin-left: auto; 
             width: 80px; 
             text-align: right; 
-            flex-shrink: 0; /* Evita que se encoja */
+            flex-shrink: 0; 
         } 
         .controls { 
             display: flex; 
             align-items: center; 
             gap: 5px; 
-            flex-shrink: 0; /* Evita que los controles se encojan */
+            flex-shrink: 0; 
         }
         .controls button { background-color: #d32f2f; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; transition: background-color 0.3s; }
         .controls button:hover { background-color: #b71c1c; }
@@ -131,266 +153,262 @@
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-carrito">
+<div class="container">
+    <div class="header-carrito">
         🛒 **Tu Carrito** <span id="contador-carrito">0</span>
     </div>
 
     <div class="brand-header">
-        <img src="logo.png" alt="Logo Gabui Express" class="brand-logo">
+        <img src="logo-gabui-express.png" alt="Logo Gabui Express" class="brand-logo">
         <h1 class="brand-name">Gabui.Express</h1>
     </div>
-    <div id="carrusel-contenedor">
-        <button id="prevBtn" class="nav-btn">❮</button>
+    
+    <div id="menu-secciones">
+        <p>Cargando menú...</p>
+    </div>
+    
+    <div class="total-container">
+        <div>Total estimado del pedido:</div>
+        <span><span id="moneda-total">Bs</span><span id="total">0.00</span></span>
+    </div>
 
-        ```
+    <button class="btn-ordenar" onclick="mostrarResumen()">Generar Orden</button>
+</div>
 
----
+<div id="resumen-modal" class="modal">
+    <div class="modal-content">
+        <h3>📝 Resumen de tu Pedido</h3>
+        <ul id="resumen-lista"></ul>
+        <p class="total">Total: <span id="moneda-resumen">Bs</span><span id="resumen-total">0.00</span></p>
+        <button class="btn-ordenar btn-whatsapp" onclick="enviarPedidoWhatsApp()">📞 Ordenar por WhatsApp</button>
+        <button class="btn-ordenar" style="background-color: #777;" onclick="cerrarResumen()">Volver al Menú</button>
+    </div>
+</div>
 
-### Explicación del Código:
+<div id="confirmacion-modal" class="modal">
+    <div class="modal-content">
+        <h3>✅ Pedido Enviado</h3>
+        <p>Revisa tu WhatsApp para finalizar la compra.</p>
+        <button onclick="cerrarConfirmacion()" class="btn-ordenar" style="width: 50%; margin: 15px auto 0;">ACEPTAR</button>
+    </div>
+</div>
 
-* **`<div class="brand-header">`**: Este es un contenedor que usa `display: flex` para que el logo y el texto (`<img>` y `<h1>`) se alineen uno al lado del otro. `justify-content: center` los centrará horizontalmente en la página.
-* **`<img src="logo-gabui-express.png" alt="Logo Gabui Express" class="brand-logo">`**: Esta etiqueta inserta tu imagen.
-    * `src="logo-gabui-express.png"`: Asegúrate de que el nombre del archivo (`logo-gabui-express.png`) sea exactamente el mismo que le diste a tu imagen descargada, y que esté en la misma carpeta que `index.html`.
-    * `alt="Logo Gabui Express"`: Texto alternativo para accesibilidad si la imagen no se carga.
-    * `class="brand-logo"`: Aplica los estilos CSS para el tamaño y el margen.
-* **`<h1 class="brand-name">Gabui.Express</h1>`**: Tu nombre de empresa con una clase para aplicarle los estilos de tamaño, color y fuente.
 
-Después de hacer estos cambios y guardar tu `index.html`, abre el archivo en tu navegador y deberías ver el logo elegantemente posicionado junto al nombre de tu negocio en la parte superior.http://googleusercontent.com/image_generation_content/3
-        <h1>Ventas-al-detal_Pick-up_WhatsApp</h1> 
+<script>
+    // *** CONFIGURACIÓN CLAVE ***
+    // Reemplaza con el número de teléfono de la pizzería. (Usando el número de tu última corrección)
+    const NUMERO_WHATSAPP = '584122409530'; 
 
-        <div id="menu-secciones">
-            <p>Cargando menú...</p>
-        </div>
+    // ESTA ES LA URL DE TU GOOGLE SHEETS PUBLICADO EN FORMATO CSV
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTgXx3-FQGvkMoG88Bw8itDysLE2pQXDM1MJdJniy4z-NXyJqIE0BqPNfsBHlT0KFe6kzy77hqz-w6/pub?gid=0&single=true&output=csv'; 
+    // --------------------------------------------------------------------
+
+    let productosDB = {}; 
+    const carrito = {};
+
+    // --- FUNCIONES CENTRALES DE CARGA Y PROCESAMIENTO ---
+
+    async function cargarMenu() {
+        document.getElementById('menu-secciones').innerHTML = '<p>Intentando cargar datos...</p>';
+        try {
+            const response = await fetch(CSV_URL);
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}.`);
+            }
+            const csvText = await response.text();
+            productosDB = parsearCSV(csvText);
+
+            renderizarMenu();
+            actualizarTotal();
+        } catch (error) {
+            console.error("Error en cargarMenu:", error);
+            document.getElementById('menu-secciones').innerHTML = '<h2>¡Error! No se pudo cargar el menú.</h2><p>Verifica la URL, la publicación y el formato de datos (ej: el precio).</p>';
+        }
+    }
+    
+    function parsearCSV(csv) {
+        const data = {};
+        const lineas = csv.replace(/\r/g, '').split('\n');
         
-        <div class="total-container">
-            <div>Total estimado del pedido:</div>
-            <span><span id="moneda-total">Bs</span><span id="total">0.00</span></span>
-        </div>
+        console.log("DEBUG: Iniciando análisis con separador: , (coma)");
 
-        <button class="btn-ordenar" onclick="mostrarResumen()">Generar Orden</button>
-    </div>
+        for (let i = 1; i < lineas.length; i++) {
+            const linea = lineas[i].trim();
+            if (linea.length === 0) continue; 
 
-    <div id="resumen-modal" class="modal">
-        <div class="modal-content">
-            <h3>📝 Resumen de tu Pedido</h3>
-            <ul id="resumen-lista"></ul>
-            <p class="total">Total: <span id="moneda-resumen">Bs</span><span id="resumen-total">0.00</span></p>
-            <button class="btn-ordenar btn-whatsapp" onclick="enviarPedidoWhatsApp()">📞 Ordenar por WhatsApp</button>
-            <button class="btn-ordenar" style="background-color: #777;" onclick="cerrarResumen()">Volver al Menú</button>
-        </div>
-    </div>
+            // Usamos coma (,) como separador de columnas
+            const columnas = linea.split(','); 
+            
+            if (columnas.length < 6) { 
+                console.error("DEBUG: Línea ignorada (menos de 6 columnas):", linea);
+                continue; 
+            }
 
-    <div id="confirmacion-modal" class="modal">
-        <div class="modal-content">
-            <h3>✅ Pedido Enviado</h3>
-            <p>Revisa tu WhatsApp para finalizar la compra.</p>
-            <button onclick="cerrarConfirmacion()" class="btn-ordenar" style="width: 50%; margin: 15px auto 0;">ACEPTAR</button>
-        </div>
-    </div>
-
-
-    <script>
-        // *** CONFIGURACIÓN CLAVE ***
-        // Reemplaza con el número de teléfono de la pizzería.
-        const NUMERO_WHATSAPP = '584122525407'; 
-
-        // ESTA ES LA URL DE TU GOOGLE SHEETS PUBLICADO EN FORMATO CSV
-        // Confirma que esta URL sea la correcta y esté publicada.
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTgXx3-FQGvkMoG88Bw8itDysLE2pQXDM1MJdJniy4z-NXyJqIE0BqPNfsBHlT0KFe6kzy77hqz-w6/pub?gid=0&single=true&output=csv'; 
-        // --------------------------------------------------------------------
-
-        let productosDB = {}; 
-        const carrito = {};
-
-        // --- FUNCIONES CENTRALES DE CARGA Y PROCESAMIENTO ---
-
-        async function cargarMenu() {
-            document.getElementById('menu-secciones').innerHTML = '<p>Intentando cargar datos...</p>';
             try {
-                const response = await fetch(CSV_URL);
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}.`);
+                // Mapea y limpia las 6 columnas: ID, NOMBRE, PRECIO, DESCRIPCIÓN, CATEGORÍA, IMAGEN_URL
+                const [id, nombre, precioStr, desc, categoria, imagenUrl] = columnas.map(c => c.trim().replace(/"/g, '')); 
+                
+                if (!id || !precioStr || !categoria) {
+                    console.error("DEBUG: Fila con campos vacíos esenciales:", linea);
+                    continue;
                 }
-                const csvText = await response.text();
-                productosDB = parsearCSV(csvText);
+                
+                // Convierte la coma decimal (,) a punto decimal (.)
+                const precioLimpio = precioStr.replace(',', '.'); 
+                const precio = parseFloat(precioLimpio);
 
-                renderizarMenu();
-                actualizarTotal();
-            } catch (error) {
-                console.error("Error en cargarMenu:", error);
-                document.getElementById('menu-secciones').innerHTML = '<h2>¡Error! No se pudo cargar el menú.</h2><p>Verifica la URL, la publicación y el formato de datos (ej: el precio).</p>';
+                if (isNaN(precio)) {
+                    console.error("DEBUG: FALLO CRÍTICO: El PRECIO no es un número. Precio recibido:", precioStr, "en línea:", linea);
+                    continue;
+                }
+
+                const producto = { id, nombre, precio, desc, categoria, imagenUrl }; 
+
+                // Agrupa por Categoría
+                if (!data[categoria]) {
+                    data[categoria] = [];
+                }
+                data[categoria].push(producto);
+                
+            } catch (e) {
+                console.error("DEBUG: Error inesperado al procesar línea:", linea, e);
             }
+        }
+        console.log("DEBUG: Datos procesados (productosDB):", data);
+        return data;
+    }
+
+
+    // --- FUNCIONES DE RENDERIZADO Y LÓGICA ---
+
+    function renderizarMenu() {
+        const menuDiv = document.getElementById('menu-secciones');
+        let html = '';
+        
+        for (const seccion in productosDB) {
+            html += `<h2>${seccion}</h2><div class="menu-section">`;
+            productosDB[seccion].forEach(p => {
+                // Inicializa el carrito si no existe
+                if (carrito[p.id] === undefined) {
+                    carrito[p.id] = 0;
+                }
+                
+                // Mostrando en Bolívares e INCLUYENDO LA IMAGEN DEL PRODUCTO
+                html += `<div class="producto">
+                            <img src="${p.imagenUrl}" alt="${p.nombre}" class="producto-img">
+                            <div class="producto-info">
+                                <h4>${p.nombre}</h4>
+                                <p>${p.desc}</p>
+                            </div>
+                            <div class="producto-precio">Bs ${p.precio.toFixed(2)}</div>
+                            <div class="controls">
+                                <button onclick="cambiarCantidad('${p.id}', -1)">-</button>
+                                <input type="number" id="cant-${p.id}" value="${carrito[p.id]}" min="0" onchange="actualizarCarrito(this, '${p.id}')">
+                                <button onclick="cambiarCantidad('${p.id}', 1)">+</button>
+                            </div>
+                        </div>`;
+            });
+            html += '</div>';
+        }
+        menuDiv.innerHTML = html;
+        actualizarContadorCarrito();
+    }
+
+    function cambiarCantidad(id, cambio) {
+        const input = document.getElementById(`cant-${id}`);
+        let nuevaCantidad = parseInt(input.value) + cambio;
+        if (nuevaCantidad < 0) nuevaCantidad = 0;
+        input.value = nuevaCantidad;
+        carrito[id] = nuevaCantidad; 
+        actualizarTotal();
+        actualizarContadorCarrito();
+    }
+
+    function actualizarCarrito(inputElement, id) {
+        let nuevaCantidad = parseInt(inputElement.value);
+        if (isNaN(nuevaCantidad) || nuevaCantidad < 0) {
+            nuevaCantidad = 0;
+            inputElement.value = 0; 
+        }
+        carrito[id] = nuevaCantidad; 
+        actualizarTotal();
+        actualizarContadorCarrito();
+    }
+
+    function obtenerItemsPedidos() {
+        const itemsPedidos = [];
+        for (const seccion in productosDB) {
+            productosDB[seccion].forEach(p => {
+                const cantidad = carrito[p.id];
+                if (cantidad > 0) {
+                    const precio = p.precio; 
+                    const subtotal = cantidad * precio;
+                    itemsPedidos.push({ nombre: p.nombre, cantidad: cantidad, subtotal: subtotal });
+                }
+            });
+        }
+        return itemsPedidos;
+    }
+
+    function actualizarTotal() {
+        let totalGeneral = 0;
+        obtenerItemsPedidos().forEach(item => { totalGeneral += item.subtotal; });
+        document.getElementById('total').textContent = totalGeneral.toFixed(2);
+    }
+    
+    function actualizarContadorCarrito() {
+        let totalItems = 0;
+        for (const id in carrito) {
+            totalItems += carrito[id];
+        }
+        document.getElementById('contador-carrito').textContent = totalItems;
+    }
+
+    // --- Funciones de Modal y WhatsApp ---
+
+    function mostrarResumen() {
+        const itemsPedidos = obtenerItemsPedidos();
+        const modal = document.getElementById('resumen-modal');
+        if (itemsPedidos.length === 0) {
+            alert('¡Tu carrito está vacío! Agrega productos para generar una orden.');
+            return;
         }
         
-        function parsearCSV(csv) {
-            const data = {};
-            const lineas = csv.replace(/\r/g, '').split('\n');
-            
-            console.log("DEBUG: Iniciando análisis con separador: , (coma)");
+        document.getElementById('resumen-lista').innerHTML = itemsPedidos.map(item => `<li>**${item.cantidad}x** ${item.nombre} <span style="float:right;">Bs ${item.subtotal.toFixed(2)}</span></li>`).join('');
+        document.getElementById('resumen-total').textContent = document.getElementById('total').textContent;
+        modal.style.display = 'flex';
+    }
 
-            for (let i = 1; i < lineas.length; i++) {
-                const linea = lineas[i].trim();
-                if (linea.length === 0) continue; 
+    function cerrarResumen() {
+        document.getElementById('resumen-modal').style.display = 'none';
+    }
 
-                // Usamos coma (,) como separador de columnas
-                const columnas = linea.split(','); 
-                
-                if (columnas.length < 6) { // *** CAMBIO CLAVE: AHORA ESPERAMOS 6 COLUMNAS ***
-                    console.error("DEBUG: Línea ignorada (menos de 6 columnas):", linea);
-                    continue; 
-                }
+    function cerrarConfirmacion() {
+        document.getElementById('confirmacion-modal').style.display = 'none';
+    }
 
-                try {
-                    // 1. Mapea y limpia las 6 columnas: ID, NOMBRE, PRECIO, DESCRIPCIÓN, CATEGORÍA, IMAGEN_URL
-                    const [id, nombre, precioStr, desc, categoria, imagenUrl] = columnas.map(c => c.trim().replace(/"/g, '')); 
-                    
-                    if (!id || !precioStr || !categoria) {
-                        console.error("DEBUG: Fila con campos vacíos esenciales:", linea);
-                        continue;
-                    }
-                    
-                    // 2. Convierte la coma decimal (,) a punto decimal (.)
-                    const precioLimpio = precioStr.replace(',', '.'); 
-                    const precio = parseFloat(precioLimpio);
+    function enviarPedidoWhatsApp() {
+        const items = obtenerItemsPedidos();
+        const total = document.getElementById('total').textContent;
 
-                    if (isNaN(precio)) {
-                        console.error("DEBUG: FALLO CRÍTICO: El PRECIO no es un número. Precio recibido:", precioStr, "en línea:", linea);
-                        continue;
-                    }
+        // Aseguramos que el nombre de la pizzería sea el de tu marca: Gabui.Express
+        let mensaje = `¡Hola! Mi orden para Gabui.Express es la siguiente:\n\n`;
+        items.forEach(item => { mensaje += `${item.cantidad}x ${item.nombre}\n`; });
+        
+        mensaje += `\n*TOTAL ESTIMADO: Bs ${total}*`;
+        mensaje += '\n\nPor favor, necesito confirmar el pedido y los detalles de pago. ¡Gracias!';
 
-                    const producto = { id, nombre, precio, desc, categoria, imagenUrl }; // *** CAMBIO CLAVE: AGREGAMOS imagenUrl al objeto producto ***
+        const mensajeCodificado = encodeURIComponent(mensaje);
+        const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${mensajeCodificado}`;
+        
+        window.open(urlWhatsApp, '_blank');
+        cerrarResumen();
+        document.getElementById('confirmacion-modal').style.display = 'flex';
+    }
 
-                    // 3. Agrupa por Categoría
-                    if (!data[categoria]) {
-                        data[categoria] = [];
-                    }
-                    data[categoria].push(producto);
-                    
-                } catch (e) {
-                    console.error("DEBUG: Error inesperado al procesar línea:", linea, e);
-                }
-            }
-            console.log("DEBUG: Datos procesados (productosDB):", data);
-            return data;
-        }
+    // El script se inicia llamando a la función de carga
+    window.onload = cargarMenu; 
 
-
-        // --- FUNCIONES DE RENDERIZADO Y LÓGICA ---
-
-        function renderizarMenu() {
-            const menuDiv = document.getElementById('menu-secciones');
-            let html = '';
-            
-            for (const seccion in productosDB) {
-                html += `<h2>${seccion}</h2><div class="menu-section">`;
-                productosDB[seccion].forEach(p => {
-                    carrito[p.id] = 0; 
-                    // Mostrando en Bolívares e INCLUYENDO LA IMAGEN DEL PRODUCTO
-                    html += `<div class="producto">
-                                <img src="${p.imagenUrl}" alt="${p.nombre}" class="producto-img">
-                                <div class="producto-info">
-                                    <h4>${p.nombre}</h4>
-                                    <p>${p.desc}</p>
-                                </div>
-                                <div class="producto-precio">Bs ${p.precio.toFixed(2)}</div>
-                                <div class="controls">
-                                    <button onclick="cambiarCantidad('${p.id}', -1)">-</button>
-                                    <input type="number" id="cant-${p.id}" value="0" min="0" onchange="actualizarCarrito(this, '${p.id}')">
-                                    <button onclick="cambiarCantidad('${p.id}', 1)">+</button>
-                                </div>
-                            </div>`;
-                });
-                html += '</div>';
-            }
-            menuDiv.innerHTML = html;
-        }
-
-        function cambiarCantidad(id, cambio) {
-            const input = document.getElementById(`cant-${id}`);
-            let nuevaCantidad = parseInt(input.value) + cambio;
-            if (nuevaCantidad < 0) nuevaCantidad = 0;
-            input.value = nuevaCantidad;
-            carrito[id] = nuevaCantidad; 
-            actualizarTotal();
-        }
-
-        function actualizarCarrito(inputElement, id) {
-            let nuevaCantidad = parseInt(inputElement.value);
-            if (isNaN(nuevaCantidad) || nuevaCantidad < 0) {
-                nuevaCantidad = 0;
-                inputElement.value = 0; 
-            }
-            carrito[id] = nuevaCantidad; 
-            actualizarTotal();
-        }
-
-        function obtenerItemsPedidos() {
-            const itemsPedidos = [];
-            for (const seccion in productosDB) {
-                productosDB[seccion].forEach(p => {
-                    const cantidad = carrito[p.id];
-                    if (cantidad > 0) {
-                        const precio = p.precio; 
-                        const subtotal = cantidad * precio;
-                        itemsPedidos.push({ nombre: p.nombre, cantidad: cantidad, subtotal: subtotal });
-                    }
-                });
-            }
-            return itemsPedidos;
-        }
-
-        function actualizarTotal() {
-            let totalGeneral = 0;
-            obtenerItemsPedidos().forEach(item => { totalGeneral += item.subtotal; });
-            document.getElementById('total').textContent = totalGeneral.toFixed(2);
-        }
-
-        // --- Funciones de Modal y WhatsApp ---
-
-        function mostrarResumen() {
-            const itemsPedidos = obtenerItemsPedidos();
-            const modal = document.getElementById('resumen-modal');
-            if (itemsPedidos.length === 0) {
-                alert('¡Tu carrito está vacío! Agrega productos para generar una orden.');
-                return;
-            }
-            // Mostrando en Bolívares
-            document.getElementById('resumen-lista').innerHTML = itemsPedidos.map(item => `<li>**${item.cantidad}x** ${item.nombre} <span style="float:right;">Bs ${item.subtotal.toFixed(2)}</span></li>`).join('');
-            document.getElementById('resumen-total').textContent = document.getElementById('total').textContent;
-            modal.style.display = 'flex';
-        }
-
-        function cerrarResumen() {
-            document.getElementById('resumen-modal').style.display = 'none';
-        }
-
-        function cerrarConfirmacion() {
-            document.getElementById('confirmacion-modal').style.display = 'none';
-        }
-
-        function enviarPedidoWhatsApp() {
-            const items = obtenerItemsPedidos();
-            const total = document.getElementById('total').textContent;
-
-            let mensaje = `¡Hola! Mi orden para Pizzería "El Olimpo" es la siguiente:\n\n`;
-            items.forEach(item => { mensaje += `${item.cantidad}x ${item.nombre}\n`; });
-            // Agregando "Bs" al mensaje de WhatsApp
-            mensaje += `\n*TOTAL ESTIMADO: Bs ${total}*`;
-            mensaje += '\n\nPor favor, necesito confirmar el pedido y los detalles de pago. ¡Gracias!';
-
-            const mensajeCodificado = encodeURIComponent(mensaje);
-            const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${mensajeCodificado}`;
-            
-            window.open(urlWhatsApp, '_blank');
-            cerrarResumen();
-            document.getElementById('confirmacion-modal').style.display = 'flex';
-        }
-
-        // El script se inicia llamando a la función de carga
-        window.onload = cargarMenu; 
-
-    </script>
-
+</script>
 </body>
 </html>
