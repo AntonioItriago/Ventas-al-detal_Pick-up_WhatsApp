@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú Gabui.Express</title>
+    <title>Menú Ventas-al-detal_Pick-up_WhatsApp</title>
     <style>
         /* ==================================== */
         /* ESTILOS CSS BASE */
@@ -46,10 +46,11 @@
             vertical-align: middle; 
         }
         .brand-name {
-            font-size: 2.2em; 
+            font-size: 1.5em; /* Reducido para que quepa el nombre largo */
             font-weight: bold;
             color: #d9534f; 
             margin: 0; 
+            text-align: center;
         }
         /* Estilos de Carrito en el Encabezado */
         .header-carrito { 
@@ -242,8 +243,8 @@
     </div>
     
     <div class="brand-header">
-        <img src="logo.png" alt="Logo Gabui Express" class="brand-logo">
-        <h1 class="brand-name">Gabui.Express</h1>
+        <img src="logo.png" alt="Logo Ventas-al-detal_Pick-up_WhatsApp" class="brand-logo">
+        <h1 class="brand-name">Ventas-al-detal_Pick-up_WhatsApp</h1>
     </div>
 
     <h2>Menú de Promociones</h2>
@@ -279,6 +280,7 @@
     const BCV_API_URL = 'https://bcv-api.rafnixg.dev/rates/';
 
     // Variable global para la tasa. Se inicializa con un valor de respaldo (BCV 2025-11-14: 236.1650 BS/USD)
+    // Usando el dato guardado en la memoria: 236.1650 BS/USD.
     let TASA_BCV_HOY = 236.1650; 
     
     // NÚMERO DE WHATSAPP ACTUALIZADO
@@ -314,6 +316,8 @@
 
     // FUNCIÓN ACTUALIZADA: Obtiene la tasa de la nueva API
     async function fetchTasaBCV() {
+        // Nota: Se usará el valor de respaldo guardado si la API falla.
+        // Tasa BCV de respaldo guardada: 236.1650 BS/USD
         try {
             const response = await fetch(BCV_API_URL, { cache: 'no-store' }); 
             if (!response.ok) throw new Error(`API error! status: ${response.status}`);
@@ -325,6 +329,8 @@
 
             if (usdRateObject && usdRateObject.rate) {
                 TASA_BCV_HOY = parseFloat(usdRateObject.rate);
+                // Aquí se podría actualizar el valor de respaldo, pero por la instrucción 
+                // mantendremos el manejo en el lado del servidor de la IA.
             } else {
                 console.warn("API de BCV no devolvió la tasa USD/BCV esperada. Usando valor de respaldo.");
             }
@@ -563,103 +569,91 @@
 
         carrito.forEach(item => {
             let subtotal = item.precio * item.cantidad;
-            let precioUnitario = item.moneda === '$' ? `$${item.precio.toFixed(2)}` : `${item.precio.toFixed(2)} ${item.moneda}`;
-            let subtotalFormateado = item.moneda === '$' ? `$${subtotal.toFixed(2)}` : `${subtotal.toFixed(2)} ${item.moneda}`;
-
+            
+            // Cálculo del total
             if (item.moneda === '$') {
                 totalPagarUSD += subtotal;
-            } else if (item.moneda === 'BS') {
+                totalPagarBS += subtotal * TASA_BCV_HOY;
+            } else {
                 totalPagarBS += subtotal;
+                totalPagarUSD += subtotal / TASA_BCV_HOY; 
             }
             
+            let precioUnitario = item.moneda === '$' ? `$${item.precio.toFixed(2)}` : `${item.precio.toFixed(2)} ${item.moneda}`;
+            
+            // El subtotal se muestra en la moneda original del producto
+            let subtotalFormateado = item.moneda === '$' ? `$${subtotal.toFixed(2)}` : `${subtotal.toFixed(2)} ${item.moneda}`;
+
+
             contenidoHTML += `
                 <li class="item-carrito">
-                    <div class="item-carrito-info">
-                        ${item.nombre} (${precioUnitario}) - Subtotal: <strong>${subtotalFormateado}</strong>
-                    </div>
-                    <div class="item-carrito-controls">
-                        <button onclick="cambiarCantidad('${item.id}', -1)">-</button>
-                        <span>${item.cantidad}</span>
-                        <button onclick="cambiarCantidad('${item.id}', 1)">+</button>
-                    </div>
+                    <span>
+                        **${item.cantidad}x** ${item.nombre} 
+                        <br>
+                        <small>(${precioUnitario})</small>
+                    </span>
+                    <strong>${subtotalFormateado}</strong>
                 </li>
             `;
         });
         
-        contenidoHTML += '</ul>';
-        contenidoHTML += '<h4>Resumen de Totales:</h4>';
-        if (totalPagarUSD > 0) {
-            contenidoHTML += `<p>Total en USD: <strong>$${totalPagarUSD.toFixed(2)}</strong></p>`;
-        }
-        if (totalPagarBS > 0) {
-            contenidoHTML += `<p>Total en BS (Sin Conversión de USD): <strong>${totalPagarBS.toFixed(2)} BS</strong></p>`;
-        }
+        // CÁLCULO DEL TOTAL
+        const totalUSD = totalPagarUSD.toFixed(2);
+        const totalBS = totalPagarBS.toFixed(2);
         
-        let totalGeneralBS = totalPagarBS + (totalPagarUSD * TASA_BCV_HOY);
-        
-        if (totalGeneralBS > 0) {
-            contenidoHTML += `<p style="color: #007bff; font-weight: bold;">TOTAL GENERAL ESTIMADO (BS): ${totalGeneralBS.toFixed(2)} BS</p>`;
-            // Muestra la tasa utilizada con 4 decimales
-            contenidoHTML += `<p style="font-size: 0.8em; color: #666;">(Tasa BCV actualizada: ${TASA_BCV_HOY.toFixed(4)})</p>`;
-        }
-        
+        contenidoHTML += `</ul>
+            <hr>
+            <p><strong>Total (Aprox. en $): $${totalUSD}</strong></p>
+            <p><strong>Total (Aprox. en Bs): ${totalBS} Bs</strong> <small>(Tasa BCV: ${TASA_BCV_HOY.toFixed(4)})</small></p>
+            <small>⚠️ Estos totales son referenciales. El precio en Bolívares se calculará con la tasa del momento al enviar el pedido.</small>
+        `;
+
         secciones.carrito.innerHTML = contenidoHTML;
     }
-
-    // Función para enviar el pedido por WhatsApp
+    
+    // Función para generar el mensaje de WhatsApp y abrir el enlace
     function consultarPrecios() {
         if (carrito.length === 0) {
-            alert("¡El carrito está vacío! Por favor, añade productos antes de enviar el pedido.");
+            alert("Tu carrito está vacío. ¡Agrega productos para hacer tu pedido!");
             return;
         }
-        
-        let mensaje = "¡Hola! Quiero hacer un pedido con Gabui.Express. Aquí está mi lista:\n\n";
+
+        let mensaje = `¡Hola! Me gustaría hacer un pedido desde el menú *Ventas-al-detal_Pick-up_WhatsApp*.\n\n`;
         let totalUSD = 0;
-        let totalBS = 0;
-
-        carrito.forEach((item, index) => {
-            let subtotal = item.precio * item.cantidad;
-
+        
+        mensaje += `*🛒 Mi Pedido:*\n`;
+        carrito.forEach(item => {
+            const subtotal = item.precio * item.cantidad;
+            
+            // Calcula total en USD para el resumen
             if (item.moneda === '$') {
                 totalUSD += subtotal;
-                mensaje += `${index + 1}. ${item.cantidad}x ${item.nombre} - $${subtotal.toFixed(2)}\n`;
-            } else if (item.moneda === 'BS') {
-                totalBS += subtotal;
-                mensaje += `${index + 1}. ${item.cantidad}x ${item.nombre} - ${subtotal.toFixed(2)} BS\n`;
+                mensaje += `- ${item.cantidad}x ${item.nombre} ($${subtotal.toFixed(2)})\n`;
+            } else {
+                 // Convertir a USD para la suma total aproximada
+                totalUSD += subtotal / TASA_BCV_HOY;
+                mensaje += `- ${item.cantidad}x ${item.nombre} (${subtotal.toFixed(2)} ${item.moneda})\n`;
             }
         });
 
-        // Calculamos el total general en bolívares para el mensaje de WhatsApp
-        let totalGeneralBS = totalBS + (totalUSD * TASA_BCV_HOY);
-
-        mensaje += "\n----------------------------------";
-        mensaje += `\nTOTAL ESTIMADO EN USD: $${totalUSD.toFixed(2)}`;
-        mensaje += `\nTOTAL ESTIMADO EN BS (solo items en BS): ${totalBS.toFixed(2)} BS`;
-        // Línea clave: Total General en Bolívares
-        mensaje += `\nTOTAL GENERAL ESTIMADO (BS): ${totalGeneralBS.toFixed(2)} BS`;
-        mensaje += `\n----------------------------------`;
-        mensaje += `\n(Tasa BCV utilizada: ${TASA_BCV_HOY.toFixed(4)})`;
-        mensaje += `\n\nPor favor, confirmen el precio final, la tasa BCV del día y el costo de delivery. ¡Gracias!`;
+        // Usamos la tasa BCV obtenida (o de respaldo) para el mensaje
+        const totalFinalUSD = totalUSD.toFixed(2);
+        const totalFinalBS = (totalUSD * TASA_BCV_HOY).toFixed(2);
         
-        const mensajeCodificado = encodeURIComponent(mensaje);
+        mensaje += `\n*💵 Total Aproximado:* $${totalFinalUSD}`;
+        mensaje += `\n*🇻🇪 Total Aproximado:* ${totalFinalBS} Bs (Tasa BCV Referencial: ${TASA_BCV_HOY.toFixed(4)})`;
+        mensaje += `\n\n*Por favor, confírmenme el precio final incluyendo el delivery, si aplica.*`;
 
-        // Abrir WhatsApp en una nueva ventana/pestaña
-        const urlWhatsApp = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP}&text=${mensajeCodificado}`;
-        window.open(urlWhatsApp, '_blank');
-        
-        // Intentar cerrar la ventana/pestaña actual.
-        setTimeout(() => {
-            try {
-                window.close();
-            } catch (e) {
-                // Falla silenciosa si el navegador lo impide
-            }
-        }, 500); 
+
+        const url = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+        window.open(url, '_blank');
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchDataAndRender();
-    });
+    
+    // ===========================================
+    // INICIALIZACIÓN
+    // ===========================================
+    // Ejecutar la carga de datos al iniciar
+    document.addEventListener('DOMContentLoaded', fetchDataAndRender);
 </script>
 </body>
 </html>
