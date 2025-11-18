@@ -276,11 +276,10 @@
     // URL PÚBLICA DE TU GOOGLE SHEET EXPORTADA COMO CSV
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTgXx3-FQGvkMoG88Bw8itDysLE2pQXDM1MJdJniy4z-NXyJqIE0BqPNfsBHlT0KFe6kzy77hqz-w6/pub?gid=0&single=true&output=csv';
     
-    // API ACTUALIZADA: para obtener la tasa BCV en tiempo real
-    const BCV_API_URL = 'https://bcv-api.rafnixg.dev/rates/';
+    // API ACTUALIZADA: para obtener la tasa BCV en tiempo real (dolarapi.com)
+    const BCV_API_URL = 'https://ve.dolarapi.com/v1/dolar';
 
     // Variable global para la tasa. Se inicializa con un valor de respaldo (BCV 2025-11-18: 236.3585 BS/USD)
-    // ESTE VALOR FUE ACTUALIZADO MANUALMENTE PARA MITIGAR LA CAÍDA DE LA API
     let TASA_BCV_HOY = 236.3585; 
     
     // NÚMERO DE WHATSAPP ACTUALIZADO
@@ -314,7 +313,7 @@
     // FUNCIONES PRINCIPALES DE FETCH Y RENDERIZADO
     // ===========================================
 
-    // FUNCIÓN ACTUALIZADA: Obtiene la tasa de la nueva API
+    // FUNCIÓN ACTUALIZADA: Obtiene la tasa de la nueva API (dolarapi.com)
     async function fetchTasaBCV() {
         try {
             const response = await fetch(BCV_API_URL, { cache: 'no-store' }); 
@@ -322,17 +321,19 @@
             
             const data = await response.json();
             
-            // Busca el objeto donde 'code' es 'USD' y 'source' es 'BCV'
-            const usdRateObject = data.find(rateObj => rateObj.code === "USD" && rateObj.source === "BCV");
-
-            if (usdRateObject && usdRateObject.rate) {
-                TASA_BCV_HOY = parseFloat(usdRateObject.rate);
+            // La nueva API retorna la tasa BCV bajo la ruta: data.dolarbcv.promedio
+            if (data && data.dolarbcv && data.dolarbcv.promedio) {
+                TASA_BCV_HOY = parseFloat(data.dolarbcv.promedio);
+                
+                // NOTA: Se actualiza la información guardada del usuario.
+                console.log(`Tasa BCV actualizada exitosamente a: ${TASA_BCV_HOY}`);
+                
             } else {
-                console.warn("API de BCV no devolvió la tasa USD/BCV esperada. Usando valor de respaldo.");
+                console.warn("API de DolarAPI no devolvió la tasa BCV esperada. Usando valor de respaldo.");
             }
         } catch (error) {
             console.error("Error al obtener la tasa BCV por API:", error);
-            // Si la API falla, se mantiene TASA_BCV_HOY en su valor de respaldo actualizado.
+            // Si la API falla, se mantiene TASA_BCV_HOY en su valor de respaldo.
         }
     }
 
@@ -555,7 +556,7 @@
         secciones.carrito.innerHTML = ''; 
 
         if (carrito.length === 0) {
-            secciones.carrito.innerHTML = '<p>El carrito está vacío. Empieza a seleccionar tus ítems.</p>';
+            secciones.carrito.innerHTML = '<p>El carrito está vacío. ¡Empieza a seleccionar tus ítems!</p>';
             return;
         }
 
