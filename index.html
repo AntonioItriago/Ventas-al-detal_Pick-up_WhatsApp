@@ -46,7 +46,7 @@
             vertical-align: middle; 
         }
         .brand-name {
-            font-size: 1.5em; /* Reducido para que quepa el nombre largo */
+            font-size: 1.5em; /* Ajustado para el nombre largo */
             font-weight: bold;
             color: #d9534f; 
             margin: 0; 
@@ -279,9 +279,9 @@
     // API ACTUALIZADA: para obtener la tasa BCV en tiempo real
     const BCV_API_URL = 'https://bcv-api.rafnixg.dev/rates/';
 
-    // Variable global para la tasa. Se inicializa con un valor de respaldo (BCV 2025-11-14: 236.1650 BS/USD)
-    // Usando el dato guardado en la memoria: 236.1650 BS/USD.
-    let TASA_BCV_HOY = 236.1650; 
+    // Variable global para la tasa. Se inicializa con un valor de respaldo (BCV 2025-11-18: 236.3585 BS/USD)
+    // ESTE VALOR FUE ACTUALIZADO MANUALMENTE PARA MITIGAR LA CAÍDA DE LA API
+    let TASA_BCV_HOY = 236.3585; 
     
     // NÚMERO DE WHATSAPP ACTUALIZADO
     const NUMERO_WHATSAPP = "584122525407"; 
@@ -316,8 +316,6 @@
 
     // FUNCIÓN ACTUALIZADA: Obtiene la tasa de la nueva API
     async function fetchTasaBCV() {
-        // Nota: Se usará el valor de respaldo guardado si la API falla.
-        // Tasa BCV de respaldo guardada: 236.1650 BS/USD
         try {
             const response = await fetch(BCV_API_URL, { cache: 'no-store' }); 
             if (!response.ok) throw new Error(`API error! status: ${response.status}`);
@@ -329,14 +327,12 @@
 
             if (usdRateObject && usdRateObject.rate) {
                 TASA_BCV_HOY = parseFloat(usdRateObject.rate);
-                // Aquí se podría actualizar el valor de respaldo, pero por la instrucción 
-                // mantendremos el manejo en el lado del servidor de la IA.
             } else {
                 console.warn("API de BCV no devolvió la tasa USD/BCV esperada. Usando valor de respaldo.");
             }
         } catch (error) {
             console.error("Error al obtener la tasa BCV por API:", error);
-            // Si la API falla, se mantiene TASA_BCV_HOY en su valor de respaldo.
+            // Si la API falla, se mantiene TASA_BCV_HOY en su valor de respaldo actualizado.
         }
     }
 
