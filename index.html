@@ -3,40 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiosko Plaza Bistro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <title>Kiosko Plaza Bistro - Menú</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        /* Paleta de colores basada en el perfil de Instagram (simulada) */
         :root {
-            --primary-color: #2a2a2a; /* Color oscuro base del logo */
-            --secondary-color: #e0e0e0; /* Color claro complementario */
-            --accent-color: #a0a0a0; /* Color de acento para detalles */
-            --text-color: #333;
-            --light-text-color: #f8f8f8;
-            --button-bg: #4CAF50; /* Verde para botones */
-            --button-hover-bg: #45a049;
+            --primary-color: #8B4513; /* Marrón oscuro */
+            --secondary-color: #D2B48C; /* Marrón claro/beige */
+            --accent-color: #A0522D; /* Marrón rojizo */
+            --text-dark: #333;
+            --text-light: #fff;
+            --background-light: #f9f9f9;
+            --background-dark: #eee;
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
+            background-color: var(--background-light);
+            color: var(--text-dark);
             line-height: 1.6;
         }
 
         header {
             background-color: var(--primary-color);
-            color: var(--light-text-color);
-            padding: 15px 20px;
+            color: var(--text-light);
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .logo-button {
@@ -49,95 +49,69 @@
         }
 
         .logo-button img {
-            width: 50px;
-            height: 50px;
+            height: 40px;
+            width: 40px;
             border-radius: 50%;
-            object-fit: cover;
             margin-right: 10px;
-            border: 2px solid var(--accent-color);
+            background-color: var(--background-light); /* Fondo para el logo simulado */
         }
 
-        .logo-button h1 {
-            margin: 0;
-            font-size: 1.8em;
-            color: var(--light-text-color);
+        .business-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--text-light);
         }
 
         .about-button {
-            background-color: var(--accent-color);
-            color: var(--light-text-color);
-            padding: 8px 15px;
+            background: none;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            color: var(--text-light);
             font-size: 0.9em;
-            transition: background-color 0.3s ease;
+            cursor: pointer;
+            text-decoration: underline;
         }
 
-        .about-button:hover {
-            background-color: var(--primary-color);
-        }
-
-        main {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 20px auto;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .category-carousel {
-            margin-bottom: 40px;
-        }
-
-        .category-carousel h2 {
-            font-size: 2em;
+        h1 {
+            text-align: center;
             color: var(--primary-color);
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
+            margin-top: 20px;
         }
 
-        .carousel-container {
+        .category-section {
+            margin-bottom: 30px;
+            padding: 0 15px;
+        }
+
+        .category-title {
+            background-color: var(--accent-color);
+            color: var(--text-light);
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .carousel {
             display: flex;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
             padding-bottom: 15px;
-            -webkit-overflow-scrolling: touch; /* smooth scrolling for iOS */
-        }
-
-        .carousel-container::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .carousel-container::-webkit-scrollbar-thumb {
-            background: var(--accent-color);
-            border-radius: 10px;
-        }
-
-        .carousel-container::-webkit-scrollbar-track {
-            background: var(--secondary-color);
-            border-radius: 10px;
         }
 
         .product-card {
             flex: 0 0 auto;
-            width: 280px;
-            margin-right: 20px;
-            background-color: #fff;
+            width: 280px; /* Ancho fijo para las tarjetas */
+            margin-right: 15px;
+            background-color: var(--background-dark);
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             overflow: hidden;
+            scroll-snap-align: start;
             display: flex;
             flex-direction: column;
-            scroll-snap-align: start;
-            transition: transform 0.2s ease-in-out;
-            cursor: pointer;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
+            justify-content: space-between;
         }
 
         .product-card img {
@@ -150,130 +124,65 @@
         .product-info {
             padding: 15px;
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
 
-        .product-info h3 {
-            font-size: 1.3em;
-            margin-top: 0;
-            margin-bottom: 10px;
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
             color: var(--primary-color);
         }
 
-        .product-info p {
+        .product-description {
             font-size: 0.9em;
-            color: #666;
+            color: #555;
             margin-bottom: 10px;
-            flex-grow: 1;
         }
 
         .product-price {
-            font-size: 1.1em;
             font-weight: bold;
-            color: var(--button-bg);
-            margin-top: auto;
-            display: block;
+            color: var(--accent-color);
+            margin-bottom: 10px;
         }
 
-        .add-to-cart-btn {
-            background-color: var(--button-bg);
-            color: white;
-            padding: 10px 15px;
+        .add-to-cart-button {
+            background-color: var(--primary-color);
+            color: var(--text-light);
             border: none;
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1em;
-            margin-top: 15px;
-            transition: background-color 0.3s ease;
+            width: calc(100% - 30px); /* Ajustar al padding de la tarjeta */
+            margin: 0 15px 15px 15px;
+            align-self: flex-end; /* Para que el botón se alinee abajo */
         }
 
-        .add-to-cart-btn:hover {
-            background-color: var(--button-hover-bg);
+        .add-to-cart-button:hover {
+            background-color: var(--accent-color);
         }
 
         .order-summary {
-            margin-top: 30px;
-            padding: 20px;
-            border: 1px solid var(--accent-color);
-            border-radius: 8px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             background-color: var(--secondary-color);
-        }
-
-        .order-summary h2 {
-            color: var(--primary-color);
-            margin-top: 0;
-        }
-
-        #cart-items {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 15px;
-        }
-
-        #cart-items li {
+            padding: 10px 15px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
-            padding-bottom: 5px;
-            border-bottom: 1px dashed var(--accent-color);
-            font-size: 0.95em;
+            z-index: 999;
         }
 
-        #cart-items li:last-child {
-            border-bottom: none;
-        }
-
-        .item-details {
-            flex-grow: 1;
-        }
-
-        .item-quantity {
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        .remove-item-btn {
-            background-color: #dc3545;
-            color: white;
+        .order-summary button {
+            background-color: var(--primary-color);
+            color: var(--text-light);
             border: none;
-            padding: 3px 8px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 0.8em;
-            margin-left: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .remove-item-btn:hover {
-            background-color: #c82333;
-        }
-
-        #order-total, #delivery-cost-display {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-top: 15px;
-            display: block;
-        }
-
-        .confirm-order-btn {
-            background-color: var(--button-bg);
-            color: white;
-            padding: 12px 20px;
-            border: none;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1.1em;
-            margin-top: 20px;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-
-        .confirm-order-btn:hover {
-            background-color: var(--button-hover-bg);
+            font-size: 1em;
         }
 
         /* Modal Styles */
@@ -286,528 +195,369 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
+            background-color: rgba(0,0,0,0.4);
             justify-content: center;
             align-items: center;
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: var(--background-light);
             margin: auto;
-            padding: 30px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 8px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             position: relative;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .modal-content h2 {
-            color: var(--primary-color);
-            margin-top: 0;
-            border-bottom: 1px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .modal-content p {
-            margin-bottom: 10px;
-        }
-
-        .modal-content a {
-            color: var(--button-bg);
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .modal-content a:hover {
-            text-decoration: underline;
         }
 
         .close-button {
             color: #aaa;
-            position: absolute;
-            top: 15px;
-            right: 25px;
-            font-size: 35px;
+            float: right;
+            font-size: 28px;
             font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
             cursor: pointer;
-            transition: color 0.3s ease;
         }
 
         .close-button:hover,
         .close-button:focus {
             color: var(--primary-color);
             text-decoration: none;
-        }
-
-        #delivery-location {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-top: 10px;
-            margin-bottom: 15px;
-            border: 1px solid var(--accent-color);
-            border-radius: 5px;
-            font-size: 1em;
-        }
-
-        #delivery-location::placeholder {
-            color: #aaa;
-        }
-
-        .calculate-delivery-btn {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
             cursor: pointer;
-            font-size: 1em;
-            margin-bottom: 15px;
-            transition: background-color 0.3s ease;
         }
 
-        .calculate-delivery-btn:hover {
-            background-color: var(--primary-color);
-        }
-
-        /* Order Confirmation Modal Specific Styles */
-        #order-confirmation-modal .modal-content {
-            max-width: 600px;
-        }
-
-        #order-confirmation-modal h2 {
-            text-align: center;
-        }
-
-        #order-confirmation-modal ul {
-            list-style: none;
+        #orderConfirmationModal ul {
+            list-style-type: none;
             padding: 0;
-            margin-bottom: 20px;
-            border: 1px solid var(--secondary-color);
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            max-height: 250px;
-            overflow-y: auto;
         }
 
-        #order-confirmation-modal ul li {
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--secondary-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        #orderConfirmationModal li {
+            margin-bottom: 8px;
+            border-bottom: 1px dashed var(--secondary-color);
+            padding-bottom: 5px;
         }
 
-        #order-confirmation-modal ul li:last-child {
-            border-bottom: none;
-        }
-
-        #order-confirmation-modal .total-section {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-top: 15px;
+        #orderConfirmationModal .total-section {
+            margin-top: 20px;
             padding-top: 10px;
-            border-top: 2px solid var(--accent-color);
+            border-top: 2px solid var(--primary-color);
+            font-weight: bold;
         }
 
-        #order-confirmation-modal .whatsapp-order-btn {
-            background-color: #25D366; /* WhatsApp green */
-            color: white;
-            padding: 12px 20px;
+        #orderConfirmationModal .delivery-info {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        #orderConfirmationModal .confirm-order-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: var(--text-light);
             border: none;
             border-radius: 5px;
-            cursor: pointer;
             font-size: 1.1em;
+            cursor: pointer;
             margin-top: 20px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s ease;
+        }
+        #orderConfirmationModal .confirm-order-button:hover {
+            background-color: var(--accent-color);
         }
 
-        #order-confirmation-modal .whatsapp-order-btn:hover {
-            background-color: #1DA851;
+        /* Responsive Adjustments */
+        @media (min-width: 768px) {
+            .carousel {
+                justify-content: center;
+            }
+            .product-card {
+                width: 300px;
+            }
         }
-
-        #order-confirmation-modal .whatsapp-order-btn img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-        }
-
-        /* About Me Modal specific styles */
-        #about-me-modal .modal-content {
-            text-align: center;
-        }
-
-        #about-me-modal .modal-content img {
-            max-width: 150px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            border: 3px solid var(--accent-color);
-        }
-
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
     </style>
 </head>
 <body>
+
     <header>
-        <button class="logo-button" id="openLocalInfoModal">
-            <img src="https://scontent.fccs3-1.fna.fbcdn.net/v/t39.30808-6/405101037_1018599426017180_8422634351664530058_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=efb6e7&_nc_ohc=F8857rYyXqMAX_n3-Jp&_nc_ht=scontent.fccs3-1.fna&oh=00_AfDSn_2aT-t5107qK2iWl7XvHnI0iW_n5yFqP_32o1Qjbg&oe=65E1E7B4" alt="Kiosko Plaza Bistro Logo">
-            <h1>Kiosko Plaza Bistro</h1>
+        <button class="logo-button" id="businessInfoButton">
+            <img src="https://via.placeholder.com/40/D2B48C/8B4513?text=Logo" alt="Logo Kiosko Plaza Bistro"> 
+            <span class="business-name">Kiosko Plaza Bistro</span>
         </button>
-        <button class="about-button" id="openAboutMeModal">Acerca de esta web</button>
+        <button class="about-button" id="aboutWebButton">Acerca de esta web</button>
     </header>
 
-    <main id="product-list">
-        <div class="order-summary">
-            <h2>Tu Pedido</h2>
-            <ul id="cart-items">
-                </ul>
-            <p id="delivery-cost-message" style="font-style: italic; color: #555;"></p>
-            <input type="text" id="delivery-location" placeholder="Ingresa tu dirección para calcular el envío">
-            <button class="calculate-delivery-btn">Calcular Envío</button>
-            <span id="order-total">Total: $0.00</span>
-            <button class="confirm-order-btn">Confirmar Pedido</button>
-        </div>
-    </main>
+    <h1>Nuestro Menú</h1>
 
-    <div id="localInfoModal" class="modal">
+    <div id="menuContent">
+        </div>
+
+    <div class="order-summary">
+        <span id="cartItemCount">0 productos en el carrito</span>
+        <button id="viewCartButton">Ver Pedido</button>
+    </div>
+
+    <div id="businessInfoModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Información de Kiosko Plaza Bistro</h2>
-            <p><strong>Nombre:</strong> Kiosko Plaza Bistro</p>
-            <p><strong>Teléfono:</strong> <a href="tel:+584122525407">+58 4122525407</a></p>
-            <p><strong>WhatsApp:</strong> <a href="https://wa.me/584122525407" target="_blank">+58 4122525407</a></p>
-            <p><strong>Dirección:</strong> Centro Comercial Millennium Mall, Nivel Plaza, Local PB-07, Caracas, Venezuela</p>
-            <p><strong>Web:</strong> <a href="https://kioskoplazabistro.com/" target="_blank">kioskoplazabistro.com</a></p>
-            <p><strong>Correo:</strong> <a href="mailto:kioskoplazabistro@gmail.com">kioskoplazabistro@gmail.com</a></p>
+            <span class="close-button" onclick="closeModal('businessInfoModal')">&times;</span>
+            <h2>Kiosko Plaza Bistro</h2>
+            <p><strong>Teléfono:</strong> +58 212 555 1234</p>
+            <p><strong>WhatsApp:</strong> <a href="https://wa.me/584122525407" target="_blank">+58 412 2525407</a></p>
+            <p><strong>Dirección:</strong> Av. Principal, C.C. Plaza, Local #10, Caracas</p>
+            <p><strong>Correo:</strong> info@kioskoplabistro.com</p>
+            <p><strong>Web:</strong> <a href="https://www.kioskoplabistro.com" target="_blank">www.kioskoplabistro.com</a></p>
             <p><strong>Instagram:</strong> <a href="https://www.instagram.com/kioskoplazabistro/" target="_blank">@kioskoplazabistro</a></p>
-            <p><strong>Coordenadas:</strong> Latitud 10.485125, Longitud -66.837500</p>
         </div>
     </div>
 
-    <div id="order-confirmation-modal" class="modal">
+    <div id="aboutWebModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Confirma tu Pedido</h2>
-            <ul id="final-order-list">
-                </ul>
-            <div class="total-section">
-                <span>Subtotal:</span>
-                <span id="confirmation-subtotal">$0.00</span>
+            <span class="close-button" onclick="closeModal('aboutWebModal')">&times;</span>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img src="https://via.placeholder.com/80/D2B48C/8B4513?text=AI" alt="Logo Antonio Itriago" style="border-radius: 50%; width: 80px; height: 80px; object-fit: cover;">
+                <p style="font-weight: bold; margin-top: 10px;">Antonio Itriago</p>
             </div>
-            <div class="total-section">
-                <span>Costo de Envío:</span>
-                <span id="confirmation-delivery-cost">$0.00</span>
-            </div>
-            <div class="total-section">
-                <span>Total a Pagar (USD):</span>
-                <span id="confirmation-total-usd">$0.00</span>
-            </div>
-            <div class="total-section">
-                <span>Total a Pagar (VES):</span>
-                <span id="confirmation-total-ves">Bs 0.00</span>
-            </div>
-            <p style="font-size: 0.9em; text-align: center; margin-top: 20px;">
-                Tasa BCV actual: 1 USD = <span id="bcv-rate-display">Cargando...</span> VES
-            </p>
-            <button class="whatsapp-order-btn" id="send-whatsapp-order">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Icon"> Enviar Pedido por WhatsApp
-            </button>
-        </div>
-    </div>
-
-    <div id="about-me-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
             <h2>Acerca de esta web</h2>
-            
-            <p>Este sistema fue diseñado y desarrollado por:</p>
-            <h3>Antonio Itriago</h3>
-            <p>Analista, Diseñador y Desarrollador de Sistemas de Información Computarizados</p>
-            <p><strong>Contacto:</strong> <a href="tel:+584122525407">+58 4122525407</a></p>
-            <p>Con gusto atiendo tus requerimientos para proyectos similares o soluciones informáticas.</p>
-            
+            <p>Diseñada y desarrollada por Antonio Itriago.</p>
+            <p>Analista y desarrollador de sistemas de información computarizados.</p>
+            <p><strong>Contacto:</strong> <a href="https://wa.me/584122525407" target="_blank">+58 412 2525407</a></p>
+            <p>Esta aplicación web ha sido optimizada para dispositivos móviles, ofreciendo una experiencia de usuario fluida y eficiente para la gestión de pedidos.</p>
+        </div>
+    </div>
+
+    <div id="orderConfirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('orderConfirmationModal')">&times;</span>
+            <h2>Confirmar Pedido</h2>
+            <div id="orderSummaryDetails">
+                </div>
+            <button class="confirm-order-button" id="sendOrderWhatsapp">Confirmar y Enviar por WhatsApp</button>
         </div>
     </div>
 
     <script>
         const WHATSAPP_NUMBER = '584122525407';
-        const GOOGLE_SHEETS_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRsTRhoswf3zopWO5PEusQsYdYglnUlWTX9HzFIvewpy4vED9fQbs9Z0V3EdQ-AGMGLLpmcs_LL_cP3/pub?gid=0&single=true&output=tsv';
+        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRsTRhoswf3zopWO5PEusQsYdYglnUlWTX9HzFIvewpy4vED9fQbs9Z0V3EdQ-AGMGLlpmcs_LL_cP3/pub?gid=0&single=true&output=tsv';
         const BCV_API_URL = 'https://ve.dolarapi.com/v1/dolares/oficial';
-        const RESTAURANT_LAT = 10.485125;
-        const RESTAURANT_LON = -66.837500;
+        const CART = {}; // { productId: { item, quantity } }
+        let currentBcvRate = 0;
 
-        let cart = [];
-        let productsData = {}; // Para almacenar los productos por ID
-        let bcvRate = 0;
-        let deliveryCost = 0;
-        let userLocation = null;
+        // Función para abrir un modal
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
 
-        // --- Fetch BCV Rate ---
-        async function fetchBcvRate() {
+        // Función para cerrar un modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Event Listeners para botones de modal
+        document.getElementById('businessInfoButton').addEventListener('click', () => openModal('businessInfoModal'));
+        document.getElementById('aboutWebButton').addEventListener('click', () => openModal('aboutWebModal'));
+        document.getElementById('viewCartButton').addEventListener('click', showOrderConfirmation);
+
+        // Cargar productos de Google Sheet
+        async function loadProducts() {
             try {
-                const response = await fetch(BCV_API_URL);
-                const data = await response.json();
-                bcvRate = data.promedio;
-                console.log('Tasa BCV:', bcvRate);
+                const response = await fetch(GOOGLE_SHEET_URL);
+                const tsvData = await response.text();
+                const products = parseTsv(tsvData);
+                renderProducts(products);
             } catch (error) {
-                console.error('Error al obtener la tasa BCV:', error);
-                bcvRate = 36; // Fallback rate
+                console.error("Error al cargar los productos:", error);
+                document.getElementById('menuContent').innerHTML = '<p>Lo sentimos, no pudimos cargar el menú en este momento. Intente de nuevo más tarde.</p>';
             }
         }
 
-        // --- Fetch Products from Google Sheets ---
-        async function fetchProducts() {
-            try {
-                const response = await fetch(GOOGLE_SHEETS_URL);
-                const text = await response.text();
-                const lines = text.split('\n').filter(line => line.trim() !== '');
-                const headers = lines[0].split('\t').map(h => h.trim());
-                const data = lines.slice(1).map(line => {
-                    const values = line.split('\t').map(v => v.trim());
-                    let item = {};
-                    headers.forEach((header, index) => {
-                        item[header] = values[index];
-                    });
-                    // Convert price to number
-                    item.price = parseFloat(item.price);
-                    return item;
+        function parseTsv(tsv) {
+            const lines = tsv.trim().split('\n');
+            const headers = lines[0].split('\t').map(header => header.trim());
+            const products = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split('\t').map(value => value.trim());
+                if (values.length !== headers.length) continue; // Skip malformed lines
+                const product = {};
+                headers.forEach((header, index) => {
+                    product[header] = values[index];
                 });
-                return data;
-            } catch (error) {
-                console.error('Error al obtener productos de Google Sheets:', error);
-                return [];
+                products.push(product);
             }
+            return products;
         }
 
-        // --- Render Products ---
         function renderProducts(products) {
-            const productListDiv = document.getElementById('product-list');
+            const menuContent = document.getElementById('menuContent');
+            menuContent.innerHTML = '';
             const categories = {};
 
-            // Group products by category
             products.forEach(product => {
                 if (!categories[product.category]) {
                     categories[product.category] = [];
                 }
                 categories[product.category].push(product);
-                productsData[product.id] = product; // Store product by ID
             });
 
-            // Render carousels for each category
             for (const category in categories) {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'category-carousel';
-                categoryDiv.innerHTML = `<h2>${category}</h2><div class="carousel-container"></div>`;
-                const carouselContainer = categoryDiv.querySelector('.carousel-container');
+                const categorySection = document.createElement('div');
+                categorySection.className = 'category-section';
+                categorySection.innerHTML = `<div class="category-title">${category}</div>`;
+
+                const carousel = document.createElement('div');
+                carousel.className = 'carousel';
 
                 categories[category].forEach(product => {
                     const productCard = document.createElement('div');
                     productCard.className = 'product-card';
                     productCard.innerHTML = `
-                        <img src="${product.image || 'https://via.placeholder.com/280x180?text=Producto'}" alt="${product.name}">
+                        <img src="${product.image_url || 'https://via.placeholder.com/280x180/D2B48C/8B4513?text=Producto'}" alt="${product.name}">
                         <div class="product-info">
-                            <h3>${product.name}</h3>
-                            <p>${product.description}</p>
-                            <span class="product-price">${product.currency === 'USD' ? '$' : ''}${product.price.toFixed(2)} ${product.currency === 'VES' ? 'Bs' : ''}</span>
-                            <button class="add-to-cart-btn" data-id="${product.id}">Añadir al Pedido</button>
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-description">${product.description}</div>
+                            <div class="product-price">${product.currency} ${product.price}</div>
                         </div>
+                        <button class="add-to-cart-button" data-id="${product.id}">Agregar al Pedido</button>
                     `;
-                    carouselContainer.appendChild(productCard);
+                    carousel.appendChild(productCard);
                 });
-                productListDiv.insertBefore(categoryDiv, productListDiv.querySelector('.order-summary'));
+                categorySection.appendChild(carousel);
+                menuContent.appendChild(categorySection);
             }
 
             // Add event listeners for "Add to Cart" buttons
-            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const productId = e.target.dataset.id;
-                    addToCart(productId);
+            document.querySelectorAll('.add-to-cart-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const productId = event.target.dataset.id;
+                    const product = products.find(p => p.id === productId);
+                    addToCart(product);
                 });
             });
         }
 
-        // --- Cart Functions ---
-        function addToCart(productId) {
-            const existingItem = cart.find(item => item.id === productId);
-            if (existingItem) {
-                existingItem.quantity++;
+        function addToCart(product) {
+            if (CART[product.id]) {
+                CART[product.id].quantity++;
             } else {
-                cart.push({ id: productId, quantity: 1 });
+                CART[product.id] = { item: product, quantity: 1 };
             }
-            updateCartDisplay();
+            updateCartSummary();
         }
 
-        function removeFromCart(productId) {
-            cart = cart.filter(item => item.id !== productId);
-            updateCartDisplay();
-        }
-
-        function updateCartDisplay() {
-            const cartItemsList = document.getElementById('cart-items');
-            cartItemsList.innerHTML = '';
-            let total = 0;
-
-            if (cart.length === 0) {
-                cartItemsList.innerHTML = '<li>Tu pedido está vacío.</li>';
-                document.getElementById('order-total').textContent = 'Total: $0.00';
-                return;
+        function updateCartSummary() {
+            let totalItems = 0;
+            for (const productId in CART) {
+                totalItems += CART[productId].quantity;
             }
-
-            cart.forEach(item => {
-                const product = productsData[item.id];
-                if (product) {
-                    const listItem = document.createElement('li');
-                    const itemPrice = product.price * item.quantity;
-                    total += itemPrice;
-                    listItem.innerHTML = `
-                        <span class="item-details">${item.quantity} x ${product.name}</span>
-                        <span>${product.currency === 'USD' ? '$' : ''}${itemPrice.toFixed(2)} ${product.currency === 'VES' ? 'Bs' : ''}</span>
-                        <button class="remove-item-btn" data-id="${product.id}">X</button>
-                    `;
-                    cartItemsList.appendChild(listItem);
-                }
-            });
-
-            document.getElementById('order-total').textContent = `Subtotal: $${total.toFixed(2)}`;
-
-            document.querySelectorAll('.remove-item-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    removeFromCart(e.target.dataset.id);
-                });
-            });
+            document.getElementById('cartItemCount').textContent = `${totalItems} productos en el carrito`;
+            document.getElementById('viewCartButton').style.display = totalItems > 0 ? 'block' : 'none';
         }
 
-        // --- Modals ---
-        const localInfoModal = document.getElementById('localInfoModal');
-        const openLocalInfoModalBtn = document.getElementById('openLocalInfoModal');
-        const closeButtons = document.querySelectorAll('.close-button');
-        const orderConfirmationModal = document.getElementById('order-confirmation-modal');
-        const confirmOrderBtn = document.querySelector('.confirm-order-btn');
-        const aboutMeModal = document.getElementById('about-me-modal');
-        const openAboutMeModalBtn = document.getElementById('openAboutMeModal');
-
-        openLocalInfoModalBtn.onclick = () => {
-            localInfoModal.style.display = 'flex';
-        }
-
-        openAboutMeModalBtn.onclick = () => {
-            aboutMeModal.style.display = 'flex';
-        }
-
-        closeButtons.forEach(button => {
-            button.onclick = (event) => {
-                event.target.closest('.modal').style.display = 'none';
-            }
-        });
-
-        window.onclick = (event) => {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
+        async function fetchBcvRate() {
+            try {
+                const response = await fetch(BCV_API_URL);
+                const data = await response.json();
+                currentBcvRate = data.promedio;
+            } catch (error) {
+                console.error("Error al obtener la tasa BCV:", error);
+                currentBcvRate = 0; // Fallback
             }
         }
 
-        // --- Confirm Order Modal Logic ---
-        confirmOrderBtn.onclick = async () => {
-            if (cart.length === 0) {
-                alert('Tu pedido está vacío. Añade productos antes de confirmar.');
-                return;
+        async function showOrderConfirmation() {
+            await fetchBcvRate(); // Actualizar la tasa antes de mostrar el modal
+
+            const orderSummaryDetails = document.getElementById('orderSummaryDetails');
+            orderSummaryDetails.innerHTML = '';
+
+            let totalUSD = 0;
+            const orderList = document.createElement('ul');
+
+            for (const productId in CART) {
+                const item = CART[productId].item;
+                const quantity = CART[productId].quantity;
+                const itemPrice = parseFloat(item.price);
+                totalUSD += itemPrice * quantity;
+
+                const listItem = document.createElement('li');
+                listItem.textContent = `${quantity}x ${item.name} - ${item.currency} ${itemPrice.toFixed(2)} c/u`;
+                orderList.appendChild(listItem);
+            }
+            orderSummaryDetails.appendChild(orderList);
+
+            const totalBS = (totalUSD * currentBcvRate).toFixed(2);
+            const totalSection = document.createElement('div');
+            totalSection.className = 'total-section';
+            totalSection.innerHTML = `
+                <p>Total en USD: $${totalUSD.toFixed(2)}</p>
+                <p>Tasa BCV (Promedio): Bs. ${currentBcvRate.toFixed(2)}</p>
+                <p>Total en Bs: Bs. ${totalBS}</p>
+            `;
+            orderSummaryDetails.appendChild(totalSection);
+
+            // Simulación de cálculo de delivery (multiplicar distancia por 2, sin mostrar distancia)
+            const simulatedDistance = 5; // Simular 5km
+            const deliveryCostUSD = (simulatedDistance * 2).toFixed(2); // Multiplicar por 2 para el costo
+            const deliveryCostBS = (deliveryCostUSD * currentBcvRate).toFixed(2);
+
+            const deliveryInfo = document.createElement('div');
+            deliveryInfo.className = 'delivery-info';
+            deliveryInfo.innerHTML = `
+                <p>Costo de envío aproximado: $${deliveryCostUSD} / Bs. ${deliveryCostBS}</p>
+                <p>Este valor es aproximado y debe ser confirmado por el negocio.</p>
+            `;
+            orderSummaryDetails.appendChild(deliveryInfo);
+
+            openModal('orderConfirmationModal');
+        }
+
+        document.getElementById('sendOrderWhatsapp').addEventListener('click', sendOrderViaWhatsapp);
+
+        function sendOrderViaWhatsapp() {
+            let orderMessage = "¡Hola! Quisiera realizar el siguiente pedido:\n\n";
+            let totalUSD = 0;
+
+            for (const productId in CART) {
+                const item = CART[productId].item;
+                const quantity = CART[productId].quantity;
+                const itemPrice = parseFloat(item.price);
+                totalUSD += itemPrice * quantity;
+                orderMessage += `- ${quantity}x ${item.name} (${item.currency} ${itemPrice.toFixed(2)} c/u)\n`;
             }
 
-            document.getElementById('bcv-rate-display').textContent = bcvRate.toFixed(2);
+            const totalBS = (totalUSD * currentBcvRate).toFixed(2);
+            orderMessage += `\nTotal estimado del pedido:\n`;
+            orderMessage += `- USD: $${totalUSD.toFixed(2)}\n`;
+            orderMessage += `- Bs: Bs. ${totalBS} (Tasa BCV: ${currentBcvRate.toFixed(2)})\n`;
 
-            const finalOrderList = document.getElementById('final-order-list');
-            finalOrderList.innerHTML = '';
-            let subtotalUSD = 0;
+            // Simulación de costo de envío
+            const simulatedDistance = 5;
+            const deliveryCostUSD = (simulatedDistance * 2).toFixed(2);
+            const deliveryCostBS = (deliveryCostUSD * currentBcvRate).toFixed(2);
 
-            cart.forEach(item => {
-                const product = productsData[item.id];
-                if (product) {
-                    const listItem = document.createElement('li');
-                    const itemPriceUSD = product.price * item.quantity;
-                    subtotalUSD += itemPriceUSD;
-                    listItem.innerHTML = `
-                        <span>${item.quantity} x ${product.name}</span>
-                        <span>$${itemPriceUSD.toFixed(2)}</span>
-                    `;
-                    finalOrderList.appendChild(listItem);
-                }
-            });
+            orderMessage += `\nCosto de envío aproximado: $${deliveryCostUSD} / Bs. ${deliveryCostBS}\n`;
+            orderMessage += `Por favor, confirma el costo total y el tiempo de entrega.`;
 
-            const totalUSD = subtotalUSD + deliveryCost;
-            const totalVES = totalUSD * bcvRate;
-
-            document.getElementById('confirmation-subtotal').textContent = `$${subtotalUSD.toFixed(2)}`;
-            document.getElementById('confirmation-delivery-cost').textContent = `$${deliveryCost.toFixed(2)}`;
-            document.getElementById('confirmation-total-usd').textContent = `$${totalUSD.toFixed(2)}`;
-            document.getElementById('confirmation-total-ves').textContent = `Bs ${totalVES.toFixed(2)}`;
-
-            orderConfirmationModal.style.display = 'flex';
-        };
-
-        // --- WhatsApp Order Logic ---
-        document.getElementById('send-whatsapp-order').onclick = () => {
-            let orderMessage = '¡Hola! Me gustaría hacer un pedido:\n\n';
-            let subtotalUSD = 0;
-
-            cart.forEach(item => {
-                const product = productsData[item.id];
-                if (product) {
-                    const itemPriceUSD = product.price * item.quantity;
-                    subtotalUSD += itemPriceUSD;
-                    orderMessage += `- ${item.quantity} x ${product.name} ($${itemPriceUSD.toFixed(2)})\n`;
-                }
-            });
-
-            const totalUSD = subtotalUSD + deliveryCost;
-            const totalVES = totalUSD * bcvRate;
-
-            orderMessage += `\nSubtotal: $${subtotalUSD.toFixed(2)}`;
-            orderMessage += `\nCosto de Envío Aproximado: $${deliveryCost.toFixed(2)}`;
-            orderMessage += `\nTotal (USD): $${totalUSD.toFixed(2)}`;
-            orderMessage += `\nTotal (VES): Bs ${totalVES.toFixed(2)}`;
-            orderMessage += `\n(Tasa BCV: 1 USD = ${bcvRate.toFixed(2)} VES)`;
-            if (userLocation) {
-                orderMessage += `\n\nMi dirección para el envío es: ${userLocation}`;
-            }
-            orderMessage += '\n\nPor favor, confirma el total y la disponibilidad. ¡Gracias!';
 
             const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(orderMessage)}`;
             window.open(whatsappUrl, '_blank');
 
-            // Clear cart after sending order (optional)
-            cart = [];
-            updateCartDisplay();
-            orderConfirmationModal.style.display = 'none';
-        };
+            // Opcional: limpiar carrito después de enviar
+            Object.keys(CART).forEach(key => delete CART[key]);
+            updateCartSummary();
+            closeModal('orderConfirmationModal');
+        }
 
-        // --- Delivery Cost Calculation (using OpenStreetMap Nominatim for geocoding) ---
-        const calculateDeliveryBtn = document.querySelector('.calculate-delivery-btn');
-        const deliveryLocationInput = document.getElementById('delivery-location');
-        const deliveryCostMessage = document.getElementById('delivery-cost-message');
 
-        calculateDeliveryBtn.onclick = async () => {
-            const address = deliveryLocationInput.value.trim();
-            if (!address) {
-                alert('Por favor, ingresa tu dirección para calcular el costo de envío.');
-                return;
-            }
-            userLocation = address; // Store user's input address
+        // Initialize
+        loadProducts();
+        updateCartSummary(); // Initialize cart count on load
+        fetchBcvRate(); // Fetch BCV rate on page load
 
-            try {
-                // Geocodificación con Nominatim (OpenStreetMap)
-                const geocodingResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
-                const geocodingData = await geocodingResponse.json();
+
+    </script>
+</body>
+</html>
