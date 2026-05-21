@@ -245,6 +245,7 @@
     const numeroWhatsApp = "584128380827"; // número en formato internacional
 
     let seleccionados = {};
+    const esQR = window.location.search.includes('qr');
 
     async function loadMenu() {
       try {
@@ -275,22 +276,32 @@
           categories[cat].forEach(item => {
             const div = document.createElement("div");
             div.className = "item";
-            div.innerHTML = `
-              <h3>${item.name}</h3>
-              <p>${item.description}</p>
-              <p><strong>${item.price} ${item.currency}</strong></p>
-              <button class="select-btn">➕ Agregar</button>
-              <div class="cantidad">Cantidad: 0</div>
-            `;
-            const btn = div.querySelector(".select-btn");
-            const cantidadDiv = div.querySelector(".cantidad");
+            
+            // Si entra por QR, no incluimos los elementos para ordenar
+            if (esQR) {
+              div.innerHTML = `
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+                <p><strong>${item.price} ${item.currency}</strong></p>
+              `;
+            } else {
+              div.innerHTML = `
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+                <p><strong>${item.price} ${item.currency}</strong></p>
+                <button class="select-btn">➕ Agregar</button>
+                <div class="cantidad">Cantidad: 0</div>
+              `;
+              const btn = div.querySelector(".select-btn");
+              const cantidadDiv = div.querySelector(".cantidad");
 
-            btn.addEventListener("click", () => {
-              if(!seleccionados[item.name]) seleccionados[item.name] = {item, cantidad:0};
-              seleccionados[item.name].cantidad++;
-              cantidadDiv.textContent = "Cantidad: " + seleccionados[item.name].cantidad;
-              actualizarPedido();
-            });
+              btn.addEventListener("click", () => {
+                if(!seleccionados[item.name]) seleccionados[item.name] = {item, cantidad:0};
+                seleccionados[item.name].cantidad++;
+                cantidadDiv.textContent = "Cantidad: " + seleccionados[item.name].cantidad;
+                actualizarPedido();
+              });
+            }
 
             carousel.appendChild(div);
           });
@@ -305,6 +316,13 @@
 
     function actualizarPedido() {
       const carritoBtn = document.getElementById("carrito-flotante");
+      
+      // Si se ingresó por QR, el carrito siempre permanecerá oculto independientemente de cualquier acción
+      if (esQR) {
+        carritoBtn.style.display = "none";
+        return;
+      }
+
       const contadorDiv = document.getElementById("contador-carrito");
       const items = Object.values(seleccionados);
       
@@ -329,15 +347,7 @@
         detalle += `- ${i.item.name} ×${i.cantidad} → ${subtotal.toFixed(2)} ${i.item.currency}\n`;
       });
 
-      // Detectar si el usuario escaneó el QR en el local
-      const esQR = window.location.search.includes('qr');
-      
-      let mensaje = "";
-      if (esQR) {
-        mensaje = `¡Hola, Joseito! Estoy en el local y quiero realizar un pedido desde mi mesa:\n\n${detalle}\n*TOTAL ESTIMADO:* ${total.toFixed(2)} ${items[0].item.currency}\n\nPor favor, necesito confirmar mi orden para procesarla. ¡Gracias!`;
-      } else {
-        mensaje = `¡Hola, Joseito! Quiero realizar un pedido:\n\n${detalle}\n*TOTAL ESTIMADO:* ${total.toFixed(2)} ${items[0].item.currency}\n\nPor favor, necesito confirmar el pedido, delivery y los detalles de pago. ¡Gracias!`;
-      }
+      const mensaje = `¡Hola, Joseito! Quiero realizar un pedido:\n\n${detalle}\n*TOTAL ESTIMADO:* ${total.toFixed(2)} ${items[0].item.currency}\n\nPor favor, necesito confirmar el pedido, delivery y los detalles de pago. ¡Gracias!`;
 
       const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
       carritoBtn.href = url;
@@ -359,6 +369,11 @@
     document.getElementById("btn-contacto").addEventListener("click", () => {
       abrirModal('modal-contacto');
     });
+
+    // Forzar la ocultación del carrito al inicio si es por QR
+    if (esQR) {
+      document.getElementById("carrito-flotante").style.display = "none";
+    }
 
     loadMenu();
   </script>
