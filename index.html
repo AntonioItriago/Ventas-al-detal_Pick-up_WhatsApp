@@ -1,563 +1,380 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiosko Plaza Bistro - Menú</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Paleta de colores basada en el perfil de Instagram (simulada) */
-        :root {
-            --primary-color: #8B4513; /* Marrón oscuro */
-            --secondary-color: #D2B48C; /* Marrón claro/beige */
-            --accent-color: #A0522D; /* Marrón rojizo */
-            --text-dark: #333;
-            --text-light: #fff;
-            --background-light: #f9f9f9;
-            --background-dark: #eee;
-        }
+  <meta charset="UTF-8">
+  <title>VALDEZ Fresh and Clean</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #fff;
+      background: url('WhatsApp Image 2026-05-17 at 17.32.38.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      padding-bottom: 80px; /* Espacio para que el botón flotante no tape contenido */
+    }
+    h1 {
+      text-align: center;
+      background: rgba(0,0,0,0.7);
+      padding: 15px;
+      margin: 0;
+    }
+    .category {
+      margin: 20px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 10px;
+      padding: 15px;
+    }
+    .carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+    }
+    /* Ocultar barra de desplazamiento en el carrusel */
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
+    .carousel {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+    .item {
+      flex: 0 0 auto;
+      width: 220px;
+      margin: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+    .item h3 {
+      margin: 0;
+      font-size: 1.1em;
+    }
+    .item p {
+      font-size: 0.9em;
+    }
+    .select-btn {
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: #ff9800;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .cantidad {
+      margin-top: 5px;
+      font-size: 0.9em;
+    }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
+    /* Nuevos estilos para el control de cantidad */
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .quantity-btn {
+      padding: 5px 10px;
+      background: #ff9800;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .quantity-input {
+      width: 50px;
+      text-align: center;
+      padding: 4px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+      background: #fff;
+      color: #000;
+    }
 
-        header {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+    /* Estilos para el botón flotante */
+    #carrito-flotante {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #25D366; /* Color WhatsApp */
+      color: #fff;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      z-index: 1000;
+      transition: transform 0.2s;
+    }
 
-        .logo-button {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
+    #carrito-flotante:active {
+      transform: scale(0.9);
+    }
 
-        .logo-button img {
-            height: 40px;
-            width: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-            background-color: var(--background-light); /* Fondo para el logo simulado */
-        }
+    #contador-carrito {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff4444;
+      color: white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 14px;
+      display: none; /* Se oculta si es 0 */
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
 
-        .business-name {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: var(--text-light);
-        }
+    /* Ocultamos el botón de pedir original */
+    #pedido {
+      display: none;
+    }
 
-        .about-button {
-            background: none;
-            border: none;
-            color: var(--text-light);
-            font-size: 0.9em;
-            cursor: pointer;
-            text-decoration: underline;
-        }
+    /* Estilos para el botón de menú de tres rayitas y la ventana modal */
+    #menu-toggle {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 30px;
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 300px;
+      width: 80%;
+      border: 1px solid #ff9800;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: #ff9800;
+    }
+    .modal-content a {
+      color: #25D366;
+      text-decoration: none;
+      display: block;
+      margin: 10px 0;
+    }
+    .modal-content a.email-link {
+      color: #00bcd4;
+    }
 
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-top: 20px;
-        }
-
-        .category-section {
-            margin-bottom: 30px;
-            padding: 0 15px;
-        }
-
-        .category-title {
-            background-color: var(--accent-color);
-            color: var(--text-light);
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-            font-weight: bold;
-        }
-
-        .carousel {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 15px;
-        }
-
-        .product-card {
-            flex: 0 0 auto;
-            width: 280px; /* Ancho fijo para las tarjetas */
-            margin-right: 15px;
-            background-color: var(--background-dark);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            overflow: hidden;
-            scroll-snap-align: start;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-bottom: 1px solid var(--secondary-color);
-        }
-
-        .product-info {
-            padding: 15px;
-            flex-grow: 1;
-        }
-
-        .product-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--primary-color);
-        }
-
-        .product-description {
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 10px;
-        }
-
-        .product-price {
-            font-weight: bold;
-            color: var(--accent-color);
-            margin-bottom: 10px;
-        }
-
-        .add-to-cart-button {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            width: calc(100% - 30px); /* Ajustar al padding de la tarjeta */
-            margin: 0 15px 15px 15px;
-            align-self: flex-end; /* Para que el botón se alinee abajo */
-        }
-
-        .add-to-cart-button:hover {
-            background-color: var(--accent-color);
-        }
-
-        .order-summary {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--secondary-color);
-            padding: 10px 15px;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 999;
-        }
-
-        .order-summary button {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1001;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: var(--background-light);
-            margin: auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            position: relative;
-        }
-
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            cursor: pointer;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: var(--primary-color);
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        #orderConfirmationModal ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        #orderConfirmationModal li {
-            margin-bottom: 8px;
-            border-bottom: 1px dashed var(--secondary-color);
-            padding-bottom: 5px;
-        }
-
-        #orderConfirmationModal .total-section {
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 2px solid var(--primary-color);
-            font-weight: bold;
-        }
-
-        #orderConfirmationModal .delivery-info {
-            margin-top: 15px;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        #orderConfirmationModal .confirm-order-button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary-color);
-            color: var(--text-light);
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        #orderConfirmationModal .confirm-order-button:hover {
-            background-color: var(--accent-color);
-        }
-
-        /* Responsive Adjustments */
-        @media (min-width: 768px) {
-            .carousel {
-                justify-content: center;
-            }
-            .product-card {
-                width: 300px;
-            }
-        }
-    </style>
+  </style>
 </head>
 <body>
+  <button id="menu-toggle">☰</button>
+  <h1>🧼 VALDEZ Fresh and Clean</h1>
+  <div id="menu"></div>
+    
+  <a id="carrito-flotante" href="#" target="_blank">
+    🛒
+    <div id="contador-carrito">0</div>
+  </a>
 
-    <header>
-        <button class="logo-button" id="businessInfoButton">
-            <img src="https://via.placeholder.com/40/D2B48C/8B4513?text=Logo" alt="Logo Kiosko Plaza Bistro"> 
-            <span class="business-name">Kiosko Plaza Bistro</span>
-        </button>
-        <button class="about-button" id="aboutWebButton">Acerca de esta web</button>
-    </header>
+  <a id="pedido" href="#" target="_blank">📲 Pedir</a>
 
-    <h1>Nuestro Menú</h1>
-
-    <div id="menuContent">
-        </div>
-
-    <div class="order-summary">
-        <span id="cartItemCount">0 productos en el carrito</span>
-        <button id="viewCartButton">Ver Pedido</button>
+  <div id="modal-contacto" class="modal">
+    <div class="modal-content">
+      <h2>Desarrollador</h2>
+      <p><strong>Antonio Itriago</strong></p>
+      <p>Analista, Programador</p>
+      <a href="https://wa.me/584122525407" target="_blank">📲 WhatsApp: +584122525407</a>
+      <a class="email-link" href="mailto:antoniojitriagoc@gmail.com">✉️ antoniojitriagoc@gmail.com</a>
     </div>
+  </div>
 
-    <div id="businessInfoModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeModal('businessInfoModal')">&times;</span>
-            <h2>Kiosko Plaza Bistro</h2>
-            <p><strong>Teléfono:</strong> +58 212 555 1234</p>
-            <p><strong>WhatsApp:</strong> <a href="https://wa.me/584122525407" target="_blank">+58 412 2525407</a></p>
-            <p><strong>Dirección:</strong> Av. Principal, C.C. Plaza, Local #10, Caracas</p>
-            <p><strong>Correo:</strong> info@kioskoplabistro.com</p>
-            <p><strong>Web:</strong> <a href="https://www.kioskoplabistro.com" target="_blank">www.kioskoplabistro.com</a></p>
-            <p><strong>Instagram:</strong> <a href="https://www.instagram.com/kioskoplazabistro/" target="_blank">@kioskoplazabistro</a></p>
-        </div>
-    </div>
+  <script>
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRrVKUJHVqKlHPJLiBuxFN3-XbCUd6RJskLvzdRtSM9iX-U76EyGgqL4W4S-nnBJ0pkEyIN9v3oHwMz/pub?output=tsv";
+    const numeroWhatsApp = "584127027665"; // Número de Valdez Fresh and Clean
 
-    <div id="aboutWebModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeModal('aboutWebModal')">&times;</span>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <img src="https://via.placeholder.com/80/D2B48C/8B4513?text=AI" alt="Logo Antonio Itriago" style="border-radius: 50%; width: 80px; height: 80px; object-fit: cover;">
-                <p style="font-weight: bold; margin-top: 10px;">Antonio Itriago</p>
-            </div>
-            <h2>Acerca de esta web</h2>
-            <p>Diseñada y desarrollada por Antonio Itriago.</p>
-            <p>Analista y desarrollador de sistemas de información computarizados.</p>
-            <p><strong>Contacto:</strong> <a href="https://wa.me/584122525407" target="_blank">+58 412 2525407</a></p>
-            <p>Esta aplicación web ha sido optimizada para dispositivos móviles, ofreciendo una experiencia de usuario fluida y eficiente para la gestión de pedidos.</p>
-        </div>
-    </div>
+    let seleccionados = {};
 
-    <div id="orderConfirmationModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeModal('orderConfirmationModal')">&times;</span>
-            <h2>Confirmar Pedido</h2>
-            <div id="orderSummaryDetails">
-                </div>
-            <button class="confirm-order-button" id="sendOrderWhatsapp">Confirmar y Enviar por WhatsApp</button>
-        </div>
-    </div>
+    async function loadMenu() {
+      try {
+        const res = await fetch(sheetUrl);
+        const text = await res.text();
+        const rows = text.trim().split("\n").map(r => r.split("\t"));
+        
+        const headers = rows[0].map(h => h.trim());
+        const data = rows.slice(1);
 
-    <script>
-        const WHATSAPP_NUMBER = '584122525407';
-        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRsTRhoswf3zopWO5PEusQsYdYglnUlWTX9HzFIvewpy4vED9fQbs9Z0V3EdQ-AGMGLlpmcs_LL_cP3/pub?gid=0&single=true&output=tsv';
-        const BCV_API_URL = 'https://ve.dolarapi.com/v1/dolares/oficial';
-        const CART = {}; // { productId: { item, quantity } }
-        let currentBcvRate = 0;
+        const categorias = {
+          "Productos de Limpieza": []
+        };
 
-        // Función para abrir un modal
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
+        data.forEach(row => {
+          const itemRaw = {};
+          headers.forEach((h, i) => itemRaw[h] = row[i]);
 
-        // Función para cerrar un modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
+          if (itemRaw["Producto"]) {
+            const item = {
+              name: itemRaw["Producto"],
+              priceDetal: itemRaw["Precio Al Detal"],
+              priceMayor: itemRaw["Precio Al Mayor"],
+              description: "Calidad y pureza garantizada."
+            };
+            categorias["Productos de Limpieza"].push(item);
+          }
+        });
 
-        // Event Listeners para botones de modal
-        document.getElementById('businessInfoButton').addEventListener('click', () => openModal('businessInfoModal'));
-        document.getElementById('aboutWebButton').addEventListener('click', () => openModal('aboutWebModal'));
-        document.getElementById('viewCartButton').addEventListener('click', showOrderConfirmation);
+        const menuDiv = document.getElementById("menu");
+        menuDiv.innerHTML = "";
 
-        // Cargar productos de Google Sheet
-        async function loadProducts() {
-            try {
-                const response = await fetch(GOOGLE_SHEET_URL);
-                const tsvData = await response.text();
-                const products = parseTsv(tsvData);
-                renderProducts(products);
-            } catch (error) {
-                console.error("Error al cargar los productos:", error);
-                document.getElementById('menuContent').innerHTML = '<p>Lo sentimos, no pudimos cargar el menú en este momento. Intente de nuevo más tarde.</p>';
-            }
-        }
+        Object.keys(categorias).forEach(cat => {
+          if (categorias[cat].length === 0) return;
 
-        function parseTsv(tsv) {
-            const lines = tsv.trim().split('\n');
-            const headers = lines[0].split('\t').map(header => header.trim());
-            const products = [];
+          const catDiv = document.createElement("div");
+          catDiv.className = "category";
+          catDiv.innerHTML = `<h2>${cat}</h2><div class="carousel"></div>`;
+          const carousel = catDiv.querySelector(".carousel");
 
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split('\t').map(value => value.trim());
-                if (values.length !== headers.length) continue; // Skip malformed lines
-                const product = {};
-                headers.forEach((header, index) => {
-                    product[header] = values[index];
-                });
-                products.push(product);
-            }
-            return products;
-        }
+          categorias[cat].forEach(item => {
+            const div = document.createElement("div");
+            div.className = "item";
+            div.innerHTML = `
+              <h3>${item.name}</h3>
+              <p>${item.description}</p>
+              <p><strong>Detal: $${item.priceDetal}</strong></p>
+              <p><small>Mayor: $${item.priceMayor} (+20L)</small></p>
+              <div class="quantity-control">
+                <button class="quantity-btn minus-btn">-</button>
+                <input type="number" class="quantity-input" value="0" min="0">
+                <button class="quantity-btn plus-btn">+</button>
+              </div>
+            `;
+            
+            const minusBtn = div.querySelector(".minus-btn");
+            const plusBtn = div.querySelector(".plus-btn");
+            const inputField = div.querySelector(".quantity-input");
 
-        function renderProducts(products) {
-            const menuContent = document.getElementById('menuContent');
-            menuContent.innerHTML = '';
-            const categories = {};
-
-            products.forEach(product => {
-                if (!categories[product.category]) {
-                    categories[product.category] = [];
-                }
-                categories[product.category].push(product);
+            plusBtn.addEventListener("click", () => {
+              let val = parseInt(inputField.value) || 0;
+              val++;
+              inputField.value = val;
+              actualizarItemSeleccionado(item, val);
             });
 
-            for (const category in categories) {
-                const categorySection = document.createElement('div');
-                categorySection.className = 'category-section';
-                categorySection.innerHTML = `<div class="category-title">${category}</div>`;
-
-                const carousel = document.createElement('div');
-                carousel.className = 'carousel';
-
-                categories[category].forEach(product => {
-                    const productCard = document.createElement('div');
-                    productCard.className = 'product-card';
-                    productCard.innerHTML = `
-                        <img src="${product.image_url || 'https://via.placeholder.com/280x180/D2B48C/8B4513?text=Producto'}" alt="${product.name}">
-                        <div class="product-info">
-                            <div class="product-name">${product.name}</div>
-                            <div class="product-description">${product.description}</div>
-                            <div class="product-price">${product.currency} ${product.price}</div>
-                        </div>
-                        <button class="add-to-cart-button" data-id="${product.id}">Agregar al Pedido</button>
-                    `;
-                    carousel.appendChild(productCard);
-                });
-                categorySection.appendChild(carousel);
-                menuContent.appendChild(categorySection);
-            }
-
-            // Add event listeners for "Add to Cart" buttons
-            document.querySelectorAll('.add-to-cart-button').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const productId = event.target.dataset.id;
-                    const product = products.find(p => p.id === productId);
-                    addToCart(product);
-                });
+            minusBtn.addEventListener("click", () => {
+              let val = parseInt(inputField.value) || 0;
+              if (val > 0) {
+                val--;
+                inputField.value = val;
+                actualizarItemSeleccionado(item, val);
+              }
             });
+
+            inputField.addEventListener("input", () => {
+              let val = parseInt(inputField.value);
+              if (isNaN(val) || val < 0) {
+                val = 0;
+                inputField.value = 0;
+              }
+              actualizarItemSeleccionado(item, val);
+            });
+
+            carousel.appendChild(div);
+          });
+
+          menuDiv.appendChild(catDiv);
+        });
+      } catch (err) {
+        document.getElementById("menu").innerHTML = "Error cargando catálogo 😢";
+        console.error(err);
+      }
+    }
+
+    function actualizarItemSeleccionado(item, cantidad) {
+      if (cantidad <= 0) {
+        delete seleccionados[item.name];
+      } else {
+        seleccionados[item.name] = { item, cantidad };
+      }
+      actualizarPedido();
+    }
+
+    function actualizarPedido() {
+      const carritoBtn = document.getElementById("carrito-flotante");
+      const contadorDiv = document.getElementById("contador-carrito");
+      const items = Object.values(seleccionados);
+        
+      const totalProductos = items.reduce((a, b) => a + b.cantidad, 0);
+        
+      if(totalProductos === 0) {
+        carritoBtn.href = "#";
+        contadorDiv.style.display = "none";
+        return;
+      }
+
+      contadorDiv.textContent = totalProductos;
+      contadorDiv.style.display = "flex";
+
+      let totalFinal = 0;
+      let detalle = "";
+
+      items.forEach(i => {
+        let precioAplicado = parseFloat(i.item.priceDetal);
+        let tipoPrecio = "Detal";
+
+        if (i.cantidad >= 20) {
+          precioAplicado = parseFloat(i.item.priceMayor);
+          tipoPrecio = "Mayor";
         }
 
-        function addToCart(product) {
-            if (CART[product.id]) {
-                CART[product.id].quantity++;
-            } else {
-                CART[product.id] = { item: product, quantity: 1 };
-            }
-            updateCartSummary();
-        }
+        const subtotal = precioAplicado * i.cantidad;
+        totalFinal += subtotal;
+        detalle += `- ${i.item.name} ×${i.cantidad} (${tipoPrecio}: $${precioAplicado.toFixed(2)}) → $${subtotal.toFixed(2)}\n`;
+      });
 
-        function updateCartSummary() {
-            let totalItems = 0;
-            for (const productId in CART) {
-                totalItems += CART[productId].quantity;
-            }
-            document.getElementById('cartItemCount').textContent = `${totalItems} productos en el carrito`;
-            document.getElementById('viewCartButton').style.display = totalItems > 0 ? 'block' : 'none';
-        }
+      const mensaje = `¡Hola! Quiero realizar un pedido a Valdez Fresh and Clean:\n\n${detalle}\n*TOTAL NETO:* $${totalFinal.toFixed(2)}\n\nPor favor, necesito confirmar el pedido y los detalles de entrega. ¡Gracias!`;
 
-        async function fetchBcvRate() {
-            try {
-                const response = await fetch(BCV_API_URL);
-                const data = await response.json();
-                currentBcvRate = data.promedio;
-            } catch (error) {
-                console.error("Error al obtener la tasa BCV:", error);
-                currentBcvRate = 0; // Fallback
-            }
-        }
+      const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+      carritoBtn.href = url;
+    }
 
-        async function showOrderConfirmation() {
-            await fetchBcvRate(); // Actualizar la tasa antes de mostrar el modal
+    // Lógica para abrir y cerrar la ventana modal de contacto
+    const btnMenu = document.getElementById("menu-toggle");
+    const modalContacto = document.getElementById("modal-contacto");
 
-            const orderSummaryDetails = document.getElementById('orderSummaryDetails');
-            orderSummaryDetails.innerHTML = '';
+    btnMenu.addEventListener("click", () => {
+      modalContacto.style.display = "flex";
+    });
 
-            let totalUSD = 0;
-            const orderList = document.createElement('ul');
+    modalContacto.addEventListener("click", (e) => {
+      if (e.target === modalContacto) {
+        modalContacto.style.display = "none";
+      }
+    });
 
-            for (const productId in CART) {
-                const item = CART[productId].item;
-                const quantity = CART[productId].quantity;
-                const itemPrice = parseFloat(item.price);
-                totalUSD += itemPrice * quantity;
-
-                const listItem = document.createElement('li');
-                listItem.textContent = `${quantity}x ${item.name} - ${item.currency} ${itemPrice.toFixed(2)} c/u`;
-                orderList.appendChild(listItem);
-            }
-            orderSummaryDetails.appendChild(orderList);
-
-            const totalBS = (totalUSD * currentBcvRate).toFixed(2);
-            const totalSection = document.createElement('div');
-            totalSection.className = 'total-section';
-            totalSection.innerHTML = `
-                <p>Total en USD: $${totalUSD.toFixed(2)}</p>
-                <p>Tasa BCV (Promedio): Bs. ${currentBcvRate.toFixed(2)}</p>
-                <p>Total en Bs: Bs. ${totalBS}</p>
-            `;
-            orderSummaryDetails.appendChild(totalSection);
-
-            // Simulación de cálculo de delivery (multiplicar distancia por 2, sin mostrar distancia)
-            const simulatedDistance = 5; // Simular 5km
-            const deliveryCostUSD = (simulatedDistance * 2).toFixed(2); // Multiplicar por 2 para el costo
-            const deliveryCostBS = (deliveryCostUSD * currentBcvRate).toFixed(2);
-
-            const deliveryInfo = document.createElement('div');
-            deliveryInfo.className = 'delivery-info';
-            deliveryInfo.innerHTML = `
-                <p>Costo de envío aproximado: $${deliveryCostUSD} / Bs. ${deliveryCostBS}</p>
-                <p>Este valor es aproximado y debe ser confirmado por el negocio.</p>
-            `;
-            orderSummaryDetails.appendChild(deliveryInfo);
-
-            openModal('orderConfirmationModal');
-        }
-
-        document.getElementById('sendOrderWhatsapp').addEventListener('click', sendOrderViaWhatsapp);
-
-        function sendOrderViaWhatsapp() {
-            let orderMessage = "¡Hola! Quisiera realizar el siguiente pedido:\n\n";
-            let totalUSD = 0;
-
-            for (const productId in CART) {
-                const item = CART[productId].item;
-                const quantity = CART[productId].quantity;
-                const itemPrice = parseFloat(item.price);
-                totalUSD += itemPrice * quantity;
-                orderMessage += `- ${quantity}x ${item.name} (${item.currency} ${itemPrice.toFixed(2)} c/u)\n`;
-            }
-
-            const totalBS = (totalUSD * currentBcvRate).toFixed(2);
-            orderMessage += `\nTotal estimado del pedido:\n`;
-            orderMessage += `- USD: $${totalUSD.toFixed(2)}\n`;
-            orderMessage += `- Bs: Bs. ${totalBS} (Tasa BCV: ${currentBcvRate.toFixed(2)})\n`;
-
-            // Simulación de costo de envío
-            const simulatedDistance = 5;
-            const deliveryCostUSD = (simulatedDistance * 2).toFixed(2);
-            const deliveryCostBS = (deliveryCostUSD * currentBcvRate).toFixed(2);
-
-            orderMessage += `\nCosto de envío aproximado: $${deliveryCostUSD} / Bs. ${deliveryCostBS}\n`;
-            orderMessage += `Por favor, confirma el costo total y el tiempo de entrega.`;
-
-
-            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(orderMessage)}`;
-            window.open(whatsappUrl, '_blank');
-
-            // Opcional: limpiar carrito después de enviar
-            Object.keys(CART).forEach(key => delete CART[key]);
-            updateCartSummary();
-            closeModal('orderConfirmationModal');
-        }
-
-
-        // Initialize
-        loadProducts();
-        updateCartSummary(); // Initialize cart count on load
-        fetchBcvRate(); // Fetch BCV rate on page load
-
-
-    </script>
+    loadMenu();
+  </script>
 </body>
 </html>
