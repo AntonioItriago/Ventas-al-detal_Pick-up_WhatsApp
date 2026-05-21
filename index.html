@@ -122,10 +122,13 @@
       display: none;
     }
 
-    /* Estilo del botón Acerca de */
-    .acerca-de-container {
-      text-align: center;
-      margin: 15px 0;
+    /* Estilo de la botonera superior */
+    .top-actions-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.5);
     }
     .acerca-de-btn {
       padding: 8px 15px;
@@ -136,13 +139,23 @@
       cursor: pointer;
       font-size: 0.9em;
     }
+    .menu-contacto-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0 5px;
+      line-height: 1;
+    }
   </style>
 </head>
 <body>
   <h1>🍔 DondeJoseito FastFood</h1>
   
-  <div class="acerca-de-container">
+  <div class="top-actions-container">
     <button class="acerca-de-btn" id="btn-acerca">ℹ️ Acerca de</button>
+    <button class="menu-contacto-btn" id="btn-contacto">☰</button>
   </div>
 
   <div id="menu"></div>
@@ -190,7 +203,7 @@
             const div = document.createElement("div");
             div.className = "item";
             div.innerHTML = `
-              <img src="${item.image}" alt="${item.name}">
+              <img src="assets/${item.image}" alt="${item.name}">
               <h3>${item.name}</h3>
               <p>${item.description}</p>
               <p><strong>${item.price} ${item.currency}</strong></p>
@@ -251,7 +264,11 @@
     }
 
     document.getElementById("btn-acerca").addEventListener("click", () => {
-      alert("DondeJoseito FastFood\n¡La mejor comida rápida con el sabor que te encanta!");
+      alert("DondeJoseito FastFood\n¡La mejor comida rápida que te encanta!");
+    });
+
+    document.getElementById("btn-contacto").addEventListener("click", () => {
+      alert("Contacto del Desarrollador:\n\nAnalista Programador: Antonio Itriago\nTeléfono: +584122525407\nEmail: antoniojitriagoc@gmail.com");
     });
 
     loadMenu();
