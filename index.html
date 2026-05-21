@@ -8,7 +8,7 @@
     body {
       font-family: Arial, sans-serif;
       color: #fff;
-      background: url('joseito Fast Food_page-0001.jpg') no-repeat center center fixed;
+      background: url('assets/fondo-app.jpeg') no-repeat center center fixed;
       background-size: cover;
       margin: 0;
       padding: 0;
@@ -148,6 +148,54 @@
       padding: 0 5px;
       line-height: 1;
     }
+
+    /* Ventanas Modales Profesionales */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal-content {
+      width: 90%;
+      max-width: 400px;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      border: 1px solid #ff9800;
+      position: relative;
+    }
+    /* Filtro oscuro interno para que los textos sobre la imagen sigan siendo legibles */
+    .modal-inner {
+      background: rgba(0, 0, 0, 0.75);
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .modal-inner h2 {
+      margin-top: 0;
+      color: #ff9800;
+    }
+    .modal-inner p {
+      font-size: 1.1em;
+      line-height: 1.5;
+    }
+    .close-modal-btn {
+      margin-top: 15px;
+      padding: 8px 20px;
+      background: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -167,6 +215,30 @@
 
   <a id="pedido" href="#" target="_blank">📲 Pedir</a>
 
+  <!-- Modal Acerca de -->
+  <div class="modal-overlay" id="modal-acerca">
+    <div class="modal-content" style="background: url('assets/fondo-acerca-de.jpeg') no-repeat center center; background-size: cover;">
+      <div class="modal-inner">
+        <h2>DondeJoseito FastFood</h2>
+        <p>¡La mejor comida rápida que te encanta!</p>
+        <button class="close-modal-btn" onclick="cerrarModal('modal-acerca')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Contacto Desarrollador -->
+  <div class="modal-overlay" id="modal-contacto">
+    <div class="modal-content" style="background: url('assets/fondo-acerca-de.jpeg') no-repeat center center; background-size: cover;">
+      <div class="modal-inner">
+        <h2>Desarrollador</h2>
+        <p><strong>Analista Programador:</strong><br>Antonio Itriago</p>
+        <p><strong>Teléfono:</strong><br>+584122525407</p>
+        <p><strong>Email:</strong><br>antoniojitriagoc@gmail.com</p>
+        <button class="close-modal-btn" onclick="cerrarModal('modal-contacto')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCxfiHazYD630xd4zsBuUO4HV_Yzy0bpPz8DUSC4CXzuCCTRhNa4D49XuTLTUcUXci-Guv1Xl4tcQr/pub?gid=1078866454&single=true&output=tsv";
     const numeroWhatsApp = "584128380827"; // número en formato internacional
@@ -181,25 +253,25 @@
         const headers = rows[0];
         const data = rows.slice(1);
 
-        const categorias = {};
+        const categories = {};
         data.forEach(row => {
           const item = {};
           headers.forEach((h,i) => item[h] = row[i]);
 
-          if(!categorias[item.category]) categorias[item.category] = [];
-          categorias[item.category].push(item);
+          if(!categories[item.category]) categories[item.category] = [];
+          categories[item.category].push(item);
         });
 
         const menuDiv = document.getElementById("menu");
         menuDiv.innerHTML = "";
 
-        Object.keys(categorias).forEach(cat => {
+        Object.keys(categories).forEach(cat => {
           const catDiv = document.createElement("div");
           catDiv.className = "category";
           catDiv.innerHTML = `<h2>${cat}</h2><div class="carousel"></div>`;
           const carousel = catDiv.querySelector(".carousel");
 
-          categorias[cat].forEach(item => {
+          categories[cat].forEach(item => {
             const div = document.createElement("div");
             div.className = "item";
             div.innerHTML = `
@@ -263,12 +335,21 @@
       carritoBtn.href = url;
     }
 
+    // Funciones para controlar los Modales
+    function abrirModal(id) {
+      document.getElementById(id).style.display = "flex";
+    }
+
+    function cerrarModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
     document.getElementById("btn-acerca").addEventListener("click", () => {
-      alert("DondeJoseito FastFood\n¡La mejor comida rápida que te encanta!");
+      abrirModal('modal-acerca');
     });
 
     document.getElementById("btn-contacto").addEventListener("click", () => {
-      alert("Contacto del Desarrollador:\n\nAnalista Programador: Antonio Itriago\nTeléfono: +584122525407\nEmail: antoniojitriagoc@gmail.com");
+      abrirModal('modal-contacto');
     });
 
     loadMenu();
