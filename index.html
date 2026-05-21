@@ -329,7 +329,15 @@
         detalle += `- ${i.item.name} ×${i.cantidad} → ${subtotal.toFixed(2)} ${i.item.currency}\n`;
       });
 
-      const mensaje = `¡Hola, Joseito! Quiero realizar un pedido:\n\n${detalle}\n*TOTAL ESTIMADO:* ${total.toFixed(2)} ${items[0].item.currency}\n\nPor favor, necesito confirmar el pedido, delivery y los detalles de pago. ¡Gracias!`;
+      // Detectar si el usuario escaneó el QR en el local
+      const esQR = window.location.search.includes('qr');
+      
+      let mensaje = "";
+      if (esQR) {
+        mensaje = `¡Hola, Joseito! Estoy en el local y quiero realizar un pedido desde mi mesa:\n\n${detalle}\n*TOTAL ESTIMADO:* ${total.toFixed(2)} ${items[0].item.currency}\n\nPor favor, necesito confirmar mi orden para procesarla. ¡Gracias!`;
+      } else {
+        mensaje = `¡Hola, Joseito! Quiero realizar un pedido:\n\n${detalle}\n*TOTAL ESTIMADO:* ${total.toFixed(2)} ${items[0].item.currency}\n\nPor favor, necesito confirmar el pedido, delivery y los detalles de pago. ¡Gracias!`;
+      }
 
       const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
       carritoBtn.href = url;
