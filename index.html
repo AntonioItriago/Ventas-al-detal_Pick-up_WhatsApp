@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>VALDEZ Fresh and Clean</title>
+  <title>DondeJoseito FastFood</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
       color: #fff;
-      background: url('assets/fondo-app.jpeg') no-repeat center center fixed;
+      background: url('joseito Fast Food_page-0001.jpg') no-repeat center center fixed;
       background-size: cover;
       margin: 0;
       padding: 0;
@@ -53,7 +53,15 @@
       font-size: 1.1em;
     }
     .item p {
+      margin: 5px 0;
       font-size: 0.9em;
+    }
+    .item img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 8px;
     }
     .select-btn {
       margin-top: 8px;
@@ -67,33 +75,6 @@
     .cantidad {
       margin-top: 5px;
       font-size: 0.9em;
-    }
-
-    /* Nuevos estilos para el control de cantidad */
-    .quantity-control {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      margin-top: 10px;
-    }
-    .quantity-btn {
-      padding: 5px 10px;
-      background: #ff9800;
-      color: #fff;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .quantity-input {
-      width: 50px;
-      text-align: center;
-      padding: 4px;
-      border-radius: 3px;
-      border: 1px solid #ccc;
-      background: #fff;
-      color: #000;
     }
 
     /* Estilos para el botón flotante */
@@ -141,62 +122,31 @@
       display: none;
     }
 
-    /* Estilos para el botón de menú de tres rayitas y la ventana modal */
-    #menu-toggle {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 30px;
-      background: none;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      z-index: 1001;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-content {
-      background: rgba(34, 34, 34, 0.85) url('assets/fondo-acerca-de.jpeg') no-repeat center;
-      background-size: cover;
-      background-blend-mode: darken;
-      padding: 20px;
-      border-radius: 10px;
+    /* Estilo del botón Acerca de */
+    .acerca-de-container {
       text-align: center;
-      max-width: 300px;
-      width: 80%;
+      margin: 15px 0;
+    }
+    .acerca-de-btn {
+      padding: 8px 15px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
       border: 1px solid #ff9800;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9em;
     }
-    .modal-content h2 {
-      margin-top: 0;
-      color: #ff9800;
-    }
-    .modal-content a {
-      color: #25D366;
-      text-decoration: none;
-      display: block;
-      margin: 10px 0;
-    }
-    .modal-content a.email-link {
-      color: #00bcd4;
-    }
-
   </style>
 </head>
 <body>
-  <button id="menu-toggle">☰</button>
-  <h1>🧼 VALDEZ Fresh and Clean</h1>
+  <h1>🍔 DondeJoseito FastFood</h1>
+  
+  <div class="acerca-de-container">
+    <button class="acerca-de-btn" id="btn-acerca">ℹ️ Acerca de</button>
+  </div>
+
   <div id="menu"></div>
-    
+  
   <a id="carrito-flotante" href="#" target="_blank">
     🛒
     <div id="contador-carrito">0</div>
@@ -204,19 +154,9 @@
 
   <a id="pedido" href="#" target="_blank">📲 Pedir</a>
 
-  <div id="modal-contacto" class="modal">
-    <div class="modal-content">
-      <h2>Desarrollador</h2>
-      <p><strong>Antonio Itriago</strong></p>
-      <p>Analista, Programador</p>
-      <a href="https://wa.me/584122525407" target="_blank">📲 WhatsApp: +584122525407</a>
-      <a class="email-link" href="mailto:antoniojitriagoc@gmail.com">✉️ antoniojitriagoc@gmail.com</a>
-    </div>
-  </div>
-
   <script>
-    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRrVKUJHVqKlHPJLiBuxFN3-XbCUd6RJskLvzdRtSM9iX-U76EyGgqL4W4S-nnBJ0pkEyIN9v3oHwMz/pub?output=tsv";
-    const numeroWhatsApp = "584127027665"; // Número de Valdez Fresh and Clean
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCxfiHazYD630xd4zsBuUO4HV_Yzy0bpPz8DUSC4CXzuCCTRhNa4D49XuTLTUcUXci-Guv1Xl4tcQr/pub?gid=1078866454&single=true&output=tsv";
+    const numeroWhatsApp = "584128380827"; // número en formato internacional
 
     let seleccionados = {};
 
@@ -225,35 +165,22 @@
         const res = await fetch(sheetUrl);
         const text = await res.text();
         const rows = text.trim().split("\n").map(r => r.split("\t"));
-        
-        const headers = rows[0].map(h => h.trim());
+        const headers = rows[0];
         const data = rows.slice(1);
 
-        const categorias = {
-          "Productos de Limpieza": []
-        };
-
+        const categorias = {};
         data.forEach(row => {
-          const itemRaw = {};
-          headers.forEach((h, i) => itemRaw[h] = row[i]);
+          const item = {};
+          headers.forEach((h,i) => item[h] = row[i]);
 
-          if (itemRaw["Producto"]) {
-            const item = {
-              name: itemRaw["Producto"],
-              priceDetal: itemRaw["Precio Al Detal"],
-              priceMayor: itemRaw["Precio Al Mayor"],
-              description: "Calidad y pureza garantizada."
-            };
-            categorias["Productos de Limpieza"].push(item);
-          }
+          if(!categorias[item.category]) categorias[item.category] = [];
+          categorias[item.category].push(item);
         });
 
         const menuDiv = document.getElementById("menu");
         menuDiv.innerHTML = "";
 
         Object.keys(categorias).forEach(cat => {
-          if (categorias[cat].length === 0) return;
-
           const catDiv = document.createElement("div");
           catDiv.className = "category";
           catDiv.innerHTML = `<h2>${cat}</h2><div class="carousel"></div>`;
@@ -263,44 +190,21 @@
             const div = document.createElement("div");
             div.className = "item";
             div.innerHTML = `
+              <img src="${item.image}" alt="${item.name}">
               <h3>${item.name}</h3>
               <p>${item.description}</p>
-              <p><strong>Detal: $${item.priceDetal}</strong></p>
-              <p><small>Mayor: $${item.priceMayor} (+20L)</small></p>
-              <div class="quantity-control">
-                <button class="quantity-btn minus-btn">-</button>
-                <input type="number" class="quantity-input" value="0" min="0">
-                <button class="quantity-btn plus-btn">+</button>
-              </div>
+              <p><strong>${item.price} ${item.currency}</strong></p>
+              <button class="select-btn">➕ Agregar</button>
+              <div class="cantidad">Cantidad: 0</div>
             `;
-            
-            const minusBtn = div.querySelector(".minus-btn");
-            const plusBtn = div.querySelector(".plus-btn");
-            const inputField = div.querySelector(".quantity-input");
+            const btn = div.querySelector(".select-btn");
+            const cantidadDiv = div.querySelector(".cantidad");
 
-            plusBtn.addEventListener("click", () => {
-              let val = parseInt(inputField.value) || 0;
-              val++;
-              inputField.value = val;
-              actualizarItemSeleccionado(item, val);
-            });
-
-            minusBtn.addEventListener("click", () => {
-              let val = parseInt(inputField.value) || 0;
-              if (val > 0) {
-                val--;
-                inputField.value = val;
-                actualizarItemSeleccionado(item, val);
-              }
-            });
-
-            inputField.addEventListener("input", () => {
-              let val = parseInt(inputField.value);
-              if (isNaN(val) || val < 0) {
-                val = 0;
-                inputField.value = 0;
-              }
-              actualizarItemSeleccionado(item, val);
+            btn.addEventListener("click", () => {
+              if(!seleccionados[item.name]) seleccionados[item.name] = {item, cantidad:0};
+              seleccionados[item.name].cantidad++;
+              cantidadDiv.textContent = "Cantidad: " + seleccionados[item.name].cantidad;
+              actualizarPedido();
             });
 
             carousel.appendChild(div);
@@ -309,27 +213,19 @@
           menuDiv.appendChild(catDiv);
         });
       } catch (err) {
-        document.getElementById("menu").innerHTML = "Error cargando catálogo 😢";
+        document.getElementById("menu").innerHTML = "Error cargando menú 😢";
         console.error(err);
       }
-    }
-
-    function actualizarItemSeleccionado(item, cantidad) {
-      if (cantidad <= 0) {
-        delete seleccionados[item.name];
-      } else {
-        seleccionados[item.name] = { item, cantidad };
-      }
-      actualizarPedido();
     }
 
     function actualizarPedido() {
       const carritoBtn = document.getElementById("carrito-flotante");
       const contadorDiv = document.getElementById("contador-carrito");
       const items = Object.values(seleccionados);
-        
+      
+      // Actualizar el contador flotante
       const totalProductos = items.reduce((a, b) => a + b.cantidad, 0);
-        
+      
       if(totalProductos === 0) {
         carritoBtn.href = "#";
         contadorDiv.style.display = "none";
@@ -339,41 +235,23 @@
       contadorDiv.textContent = totalProductos;
       contadorDiv.style.display = "flex";
 
-      let totalFinal = 0;
+      let total = 0;
       let detalle = "";
 
       items.forEach(i => {
-        let precioAplicado = parseFloat(i.item.priceDetal);
-        let tipoPrecio = "Detal";
-
-        if (i.cantidad >= 20) {
-          precioAplicado = parseFloat(i.item.priceMayor);
-          tipoPrecio = "Mayor";
-        }
-
-        const subtotal = precioAplicado * i.cantidad;
-        totalFinal += subtotal;
-        detalle += `- ${i.item.name} ×${i.cantidad} (${tipoPrecio}: $${precioAplicado.toFixed(2)}) → $${subtotal.toFixed(2)}\n`;
+        const subtotal = parseFloat(i.item.price) * i.cantidad;
+        total += subtotal;
+        detalle += `- ${i.item.name} ×${i.cantidad} → ${subtotal.toFixed(2)} ${i.item.currency}\n`;
       });
 
-      const mensaje = `¡Hola! Quiero realizar un pedido a Valdez Fresh and Clean:\n\n${detalle}\n*TOTAL NETO:* $${totalFinal.toFixed(2)}\n\nPor favor, necesito confirmar el pedido y los detalles de entrega. ¡Gracias!`;
+      const mensaje = `¡Hola, Joseito! Quiero realizar un pedido:\n\n${detalle}\n*TOTAL ESTIMADO:* ${total.toFixed(2)} ${items[0].item.currency}\n\nPor favor, necesito confirmar el pedido, delivery y los detalles de pago. ¡Gracias!`;
 
       const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
       carritoBtn.href = url;
     }
 
-    // Lógica para abrir y cerrar la ventana modal de contacto
-    const btnMenu = document.getElementById("menu-toggle");
-    const modalContacto = document.getElementById("modal-contacto");
-
-    btnMenu.addEventListener("click", () => {
-      modalContacto.style.display = "flex";
-    });
-
-    modalContacto.addEventListener("click", (e) => {
-      if (e.target === modalContacto) {
-        modalContacto.style.display = "none";
-      }
+    document.getElementById("btn-acerca").addEventListener("click", () => {
+      alert("DondeJoseito FastFood\n¡La mejor comida rápida con el sabor que te encanta!");
     });
 
     loadMenu();
